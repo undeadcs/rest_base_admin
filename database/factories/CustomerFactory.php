@@ -15,10 +15,10 @@ class CustomerFactory extends Factory {
 	 */
 	public function definition( ) : array {
 		return [
-			'name' => fake( )->name( ),
-			'phone_number' => fake( )->phoneNumber( ),
-			'car_number' => fake( )->regexify( '[A-Z0-9]{5}' ),
-			'comment' => fake( )->text( )
+			'name' => $this->faker->name( ),
+			'phone_number' => $this->faker->phoneNumber( ),
+			'car_number' => $this->faker->regexify( '[A-Z0-9]{5}' ),
+			'comment' => $this->faker->text( )
 		];
 	}
 }

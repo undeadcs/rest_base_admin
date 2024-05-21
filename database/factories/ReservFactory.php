@@ -21,10 +21,10 @@ class ReservFactory extends Factory {
 			'apartment_id' => Apartment::factory( ),
 			'customer_id' => Customer::factory( ),
 			'apartment_price_id' => ApartmentPrice::factory( ),
-			'from' => fake( )->dateTime( ),
-			'to' => fake( )->dateTime( ),
-			'persons_number' => mt_rand( 1, 5 ),
-			'comment' => fake( )->text( )
+			'from' => $this->faker->dateTime( ),
+			'to' => $this->faker->dateTime( ),
+			'persons_number' => $this->faker->randomNumber( ),
+			'comment' => $this->faker->text( )
 		];
 	}
 }

@@ -21,8 +21,8 @@ class InventoryReservFactory extends Factory {
 			'inventory_id' => Inventory::factory( ),
 			'reserv_id' => Reserv::factory( ),
 			'inventory_price_id' => InventoryPrice::factory( ),
-			'returned' => ( bool ) mt_rand( 0, 1 ),
-			'comment' => fake( )->text( )
+			'returned' => $this->faker->boolean( ),
+			'comment' => $this->faker->text( )
 		];
 	}
 }

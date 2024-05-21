@@ -16,9 +16,9 @@ class ApartmentPriceFactory extends Factory {
 	 */
 	public function definition( ) : array {
 		return [
-			'apartment_id' => Apartment::factory( ),
-			'created_at' => fake( )->dateTime( )->format( 'Y-m-d H:i:s' ),
-			'price' => fake( )->randomFloat( null, 1.0, 5000.0 )
+			'apartment_id'	=> Apartment::factory( ),
+			'created_at'	=> $this->faker->dateTime( )->format( 'Y-m-d H:i:s' ),
+			'price'			=> $this->faker->randomFloat( null, 1.0, 5000.0 )
 		];
 	}
 }

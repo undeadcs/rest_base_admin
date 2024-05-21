@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Inventory;
+use App\Enums\PayType;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Inventory>
@@ -16,8 +17,7 @@ class InventoryFactory extends Factory {
 	 */
 	public function definition( ) : array {
 		return [
-			'title' => fake( )->regexify( '[a-zA-Z]{5}' ),
-			'how_pay' => fake( )->randomElement( [ Inventory::PAY_ONCE, Inventory::PAY_DAILY ] )
+			'title' => $this->faker->regexify( '[a-zA-Z]{5}' )
 		];
 	}
 }

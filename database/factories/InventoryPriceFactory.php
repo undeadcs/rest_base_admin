@@ -17,8 +17,8 @@ class InventoryPriceFactory extends Factory {
 	public function definition( ) : array {
 		return [
 			'inventory_id' => Inventory::factory( ),
-			'created_at' => fake( )->dateTime( )->format( 'Y-m-d H:i:s' ),
-			'price' => fake( )->randomFloat( null, 1.0, 5000.0 )
+			'created_at' => $this->faker->dateTime( )->format( 'Y-m-d H:i:s' ),
+			'price' => $this->faker->randomFloat( null, 1.0, 5000.0 )
 		];
 	}
 }

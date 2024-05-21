@@ -15,10 +15,10 @@ class ApartmentFactory extends Factory {
 	 */
 	public function definition( ) : array {
 		return [
-			'title' => fake( )->text( 64 ),
-			'number' => mt_rand( 1, 100 ),
-			'capacity' => mt_rand( 1, 4 ),
-			'comment' => fake( )->text( )
+			'title'		=> $this->faker->text( 64 ),
+			'number'	=> $this->faker->unique( )->randomNumber( ),
+			'capacity'	=> $this->faker->randomNumber( ),
+			'comment'	=> $this->faker->text( )
 		];
 	}
 }
