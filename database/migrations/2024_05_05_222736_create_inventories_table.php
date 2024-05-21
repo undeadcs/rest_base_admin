@@ -12,7 +12,6 @@ return new class extends Migration {
 		Schema::create( 'inventories', function( Blueprint $table ) {
 			$table->id( );
 			$table->string( 'title' );
-			$table->smallInteger( 'how_pay' );
 		} );
 	}
 
