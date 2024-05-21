@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Цена за инвентарь
@@ -15,4 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class InventoryPrice extends Model {
 	use HasFactory;
+	
+	public function inventory( ) : BelongsTo {
+		return $this->belongsTo( Inventory::class );
+	}
 }

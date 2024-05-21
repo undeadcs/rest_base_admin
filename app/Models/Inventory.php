@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Инвентарь
@@ -11,14 +12,13 @@ use Illuminate\Database\Eloquent\Model;
  * 
  * @property int $id
  * @property string $title
- * @property int $how_pay
  */
 class Inventory extends Model {
 	use HasFactory;
 	
-	const // виды оплаты
-		PAY_ONCE	= 0,
-		PAY_DAILY	= 1;
-	
 	public $timestamps = false;
+	
+	public function prices( ) : HasMany {
+		return $this->hasMany( InventoryPrice::class );
+	}
 }
