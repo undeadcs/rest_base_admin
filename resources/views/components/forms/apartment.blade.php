@@ -1,7 +1,9 @@
 <form class="mb-3" method="post" action="{{ url( $apartment->id ? '/apartments/'.$apartment->id : '/apartments' ) }}" autocomplete="off">
 @csrf
-@if ( $apartment->id ) @method( 'PUT' ) @endif
+@if ( $apartment->id )
+@method( 'PUT' )
 <input type="hidden" name="id" value="{{ $apartment->id }}"/>
+@endif
 <div class="mb-3">
 	<label for="title">{{ __( 'Наименование' ) }}</label>
 	<input id="title" class="form-control" type="text" name="title" value="{{ $apartment->title }}" autofocus="autofocus"/>
