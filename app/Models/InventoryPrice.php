@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class InventoryPrice extends Model {
 	use HasFactory;
 	
+	public $timestamps = false;
+	
 	public function inventory( ) : BelongsTo {
 		return $this->belongsTo( Inventory::class );
 	}

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Services\TopNavBar;
 use App\Repositories\ApartmentRepository;
 use App\Repositories\DatabaseApartmentRepository;
+use App\Repositories\InventoryRepository;
+use App\Repositories\DatabaseInventoryRepository;
 
 class AppServiceProvider extends ServiceProvider {
 	/**
@@ -15,6 +17,7 @@ class AppServiceProvider extends ServiceProvider {
 	public function register( ) : void {
 		$this->app->singleton( TopNavBar::class );
 		$this->app->singleton( ApartmentRepository::class, DatabaseApartmentRepository::class );
+		$this->app->singleton( InventoryRepository::class, DatabaseInventoryRepository::class );
 	}
 
 	/**

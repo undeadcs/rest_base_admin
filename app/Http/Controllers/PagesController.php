@@ -19,10 +19,10 @@ class PagesController extends Controller {
 		return view( 'components.pages.'.TopPage::Main->value, [ 'top_nav_items' => $this->topNavBar->items( ) ] );
 	}
 	
-	public function apartments( ) : View {
+	public function apartments( ) : View { // @todo ApartmentsRepository
 		$apartments = Apartment::orderBy( 'number', 'desc' )->with( 'currentPrice' )->get( );
 		$apartments->each( function( Apartment $apartment ) {
-			$apartment->price = $apartment->currentPrice->price;
+			$apartment->price = $apartment->currentPrice ? $apartment->currentPrice->price : 0.0;
 		} );
 		$columns = [
 			( object ) [ 'fieldName' => 'title',	'title' => __( 'Наименование'	) ],
