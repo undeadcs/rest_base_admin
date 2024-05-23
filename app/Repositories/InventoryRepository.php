@@ -10,5 +10,6 @@ interface InventoryRepository {
 	public function List( ) : Collection;
 	public function Find( int $id ) : Inventory;
 	public function Add( string $title ) : ?Inventory;
+	public function Update( Inventory $apartment, string $title ) : bool;
 	public function PriceAdd( Inventory $inventory, float $priceValue ) : ?InventoryPrice;
 }

@@ -22,6 +22,17 @@ class DatabaseInventoryRepository implements InventoryRepository {
 		return $inventory->save( ) ? $inventory : null;
 	}
 	
+	public function Update( Inventory $apartment, string $title ) : bool {
+		$update = false;
+		
+		if ( $apartment->title != $title ) {
+			$update = true;
+			$apartment->title = $title;
+		}
+		
+		return !$update || $apartment->save( );
+	}
+	
 	public function PriceAdd( Inventory $inventory, float $priceValue ) : ?InventoryPrice {
 		$price = new InventoryPrice;
 		$price->inventory_id = $inventory->id;
