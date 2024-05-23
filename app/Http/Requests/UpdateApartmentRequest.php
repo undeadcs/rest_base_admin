@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+// @todo действительно нужен? id и так участвует в урле
 class UpdateApartmentRequest extends AddApartmentRequest {
 	/**
 	 * Get the validation rules that apply to the request.

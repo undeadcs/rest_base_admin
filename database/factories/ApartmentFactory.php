@@ -15,7 +15,7 @@ class ApartmentFactory extends Factory {
 	 */
 	public function definition( ) : array {
 		return [
-			'title'		=> $this->faker->text( 64 ),
+			'title'		=> $this->faker->text( 32 ),
 			'number'	=> $this->faker->unique( )->randomNumber( ),
 			'capacity'	=> $this->faker->randomNumber( ),
 			'comment'	=> $this->faker->text( )

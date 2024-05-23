@@ -8,46 +8,44 @@ use App\Http\Requests\AddApartmentRequest;
 use App\Http\Requests\UpdateApartmentRequest;
 use App\Models\Apartment;
 use App\Models\ApartmentPrice;
+use App\Repositories\ApartmentRepository;
 
 class ApartmentsController extends Controller {
-	protected function SaveApartment( Apartment $apartment, array $input ) : void {
-		$apartment->title = ( string ) $input[ 'title' ];
-		$apartment->number = ( int ) $input[ 'number' ];
-		$apartment->capacity = ( int ) $input[ 'capacity' ];
-		$apartment->comment = ( string ) $input[ 'comment' ];
-		
-		$apartment->save( );
-	}
+	protected ApartmentRepository $apartments;
 	
-	protected function SavePrice( Apartment $apartment, float $priceValue ) : void {
-		$price = new ApartmentPrice;
-		$price->apartment_id = $apartment->id;
-		$price->created_at = now( );
-		$price->price = $priceValue;
-		$price->save( );
+	public function __construct( ApartmentRepository $apartments ) {
+		$this->apartments = $apartments;
 	}
 	
 	public function add( AddApartmentRequest $request ) : RedirectResponse {
 		$input = $request->validated( );
 		
-		$apartment = new Apartment;
-		$this->SaveApartment( $apartment, $input );
-		$this->SavePrice( $apartment, ( float ) $input[ 'price' ] );
-		
-		return redirect( '/apartments' );
-	}
-	
-	public function update( Apartment $apartment, UpdateApartmentRequest $request ) : RedirectResponse {
-		$input = $request->validated( );
-		
-		$this->SaveApartment( $apartment, $input );
-		
-		$priceValue = ( float ) $input[ 'price' ];
-		
-		if ( ( float ) $apartment->currentPrice->price != $priceValue ) {
-			$this->SavePrice( $apartment, ( float ) $priceValue );
+		$apartment = $this->apartments->Add( $input[ 'title' ], ( int ) $input[ 'number' ], ( int ) $input[ 'capacity' ], $input[ 'comment' ] );
+		if ( !$apartment ) {
+			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи' ) ] );
+		}
+		if ( !$this->apartments->PriceAdd( $apartment, ( float ) $input[ 'price' ] ) ) {
+			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение цены' ) ] );
 		}
 		
-		return redirect( '/apartments' );
+		return redirect( '/apartments' )->with( 'success', __( 'Апартаменты добавлены' ) );
+	}
+	
+	public function update( Apartment $apartment, AddApartmentRequest $request ) : RedirectResponse {
+		$input = $request->validated( );
+		
+		if ( !$this->apartments->Update( $apartment, $input[ 'title' ], ( int ) $input[ 'number' ], ( int ) $input[ 'capacity' ], $input[ 'comment' ] ) ) {
+			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи' ) ] );
+		}
+		
+		$newPrice = ( float ) $input[ 'price' ];
+		
+		if ( !$apartment->currentPrice || ( $apartment->currentPrice->price != $newPrice ) ) {
+			if ( !$this->apartments->PriceAdd( $apartment, $newPrice ) ) {
+				return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение цены' ) ] );
+			}
+		}
+		
+		return redirect( '/apartments' )->with( 'success', __( 'Апартаменты сохранены' ) );
 	}
 }
