@@ -8,7 +8,7 @@ use App\Repositories\InventoryRepository;
 use Illuminate\Http\JsonResponse;
 use App\Models\Inventory;
 
-class InventoryController extends Controller {
+class InventoriesController extends Controller {
 	protected InventoryRepository $inventories;
 	
 	public function __construct( InventoryRepository $inventories ) {
