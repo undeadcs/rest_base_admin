@@ -9,6 +9,8 @@ use App\Repositories\ApartmentRepository;
 use App\Repositories\DatabaseApartmentRepository;
 use App\Repositories\InventoryRepository;
 use App\Repositories\DatabaseInventoryRepository;
+use App\Repositories\CustomerRepository;
+use App\Repositories\DatabaseCustomerRepository;
 
 class AppServiceProvider extends ServiceProvider {
 	/**
@@ -18,6 +20,7 @@ class AppServiceProvider extends ServiceProvider {
 		$this->app->singleton( TopNavBar::class );
 		$this->app->singleton( ApartmentRepository::class, DatabaseApartmentRepository::class );
 		$this->app->singleton( InventoryRepository::class, DatabaseInventoryRepository::class );
+		$this->app->singleton( CustomerRepository::class, DatabaseCustomerRepository::class );
 	}
 
 	/**
