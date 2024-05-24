@@ -46,6 +46,21 @@ class InventoriesControllerTest extends TestCase {
 		$this->from( $url )->post( '/inventories', $data )->assertRedirect( $url );
 	}
 	
+	public function test_add_success( ) : void {
+		$inventory = Inventory::factory( )->hasPrices( 1 )->create( );
+		$data = [
+			'title'	=> $inventory->title,
+			'price'	=> $inventory->currentPrice->price
+		];
+		
+		$this->instance( InventoryRepository::class, \Mockery::mock( InventoryRepository::class, function( MockInterface $mock ) use ( $inventory ) {
+			$mock->shouldReceive( 'Add' )->with( $inventory->title )->andReturn( $inventory );
+			$mock->shouldReceive( 'PriceAdd' )->with( $inventory, $inventory->currentPrice->price )->andReturn( $inventory->currentPrice );
+		} ) );
+		
+		$this->from( '/inventories/add' )->post( '/inventories', $data )->assertRedirect( '/inventories' );
+	}
+	
 	public function test_update_failed( ) : void {
 		$inventory = Inventory::factory( )->create( );
 		$updateInventory = Inventory::factory( )->make( );
