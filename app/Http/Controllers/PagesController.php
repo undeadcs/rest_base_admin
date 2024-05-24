@@ -74,7 +74,7 @@ class PagesController extends Controller {
 			'editFieldName' => 'id',
 			'newEntityUrl' => url( '/customers/add' ),
 			'currentPage' => $paginator->currentPage( ),
-			'lastPage' => $paginator->lastPage( )
+			'lastPage' => $paginator->isEmpty( ) ? null : $paginator->lastPage( )
 		] );
 	}
 	
