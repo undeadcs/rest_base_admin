@@ -2,12 +2,12 @@
 
 namespace App\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\Customer;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class DatabaseCustomerRepository implements CustomerRepository {
-	public function List( int $page = 1, int $pageSize = 25 ) : Collection {
-		return Customer::orderBy( 'name', 'asc' )->paginate( $pageSize, [ '*' ], 'page', $page )->getCollection( );
+	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
+		return Customer::orderBy( 'name', 'asc' )->paginate( $pageSize, [ '*' ], 'page', $page );
 	}
 	
 	public function Find( int $id ) : Customer {

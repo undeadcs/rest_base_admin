@@ -3,11 +3,10 @@
 <a class="btn btn-success" href="{{ $newEntityUrl }}">{{ __( 'Добавить' ) }}</a>
 </div>
 @endif
-<table class="table"><thead>
+<table class="table">
 @foreach( $columns as $column )
 <th class="col col-for-{{ $column->fieldName }}">{{ $column->title }}</th>
 @endforeach
-</thead><tbody>
 @foreach( $instances as $instance )
 <tr>
 	@foreach( $columns as $column )
@@ -21,5 +20,11 @@
 	@endforeach
 </tr>
 @endforeach
-</tbody><tfoot>
-</tfoot></table>
+</table>
+@if ( $attributes->has( 'last-page' ) )
+<nav><ul class="pagination justify-content-center">
+@for( $pageNumber = 1; $pageNumber <= $attributes->get( 'last-page' ); ++$pageNumber )
+<li @class( [ 'page-item', 'active' => $pageNumber == $attributes->get( 'current-page' ) ] )><a class="page-link" href="{{ $baseUrl }}/?page={{ $pageNumber }}">{{ $pageNumber }}</a></li>
+@endfor
+</ul></nav>
+@endif

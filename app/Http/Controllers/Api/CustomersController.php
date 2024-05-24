@@ -16,7 +16,7 @@ class CustomersController extends Controller {
 	}
 	
 	public function index( Request $request ) : JsonResponse {
-		return response( )->json( $this->customers->List( ( int ) $request->input( 'page' ) )->toArray( ) );
+		return response( )->json( $this->customers->List( ( int ) $request->input( 'page' ) )->items( ) );
 	}
 	
 	public function instance( Customer $customer ) : JsonResponse {
