@@ -17,7 +17,7 @@ class CustomerFactory extends Factory {
 		return [
 			'name'			=> $this->faker->name( ),
 			'phone_number'	=> $this->faker->phoneNumber( ),
-			'car_number'	=> $this->faker->regexify( '[A-Z][0-9]{3}[A-Z]{2}[0-9]{2,3}' ),
+			'car_number'	=> $this->faker->regexify( '[0-9A-Z]{6}' ),
 			'comment'		=> $this->faker->text( )
 		];
 	}

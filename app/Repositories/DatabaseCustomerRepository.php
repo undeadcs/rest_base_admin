@@ -35,9 +35,9 @@ class DatabaseCustomerRepository implements CustomerRepository {
 			$update = true;
 			$customer->phone_number = $phoneNumber;
 		}
-		if ( $customer->car_number != $phoneNumber ) {
+		if ( $customer->car_number != $carNumber ) {
 			$update = true;
-			$customer->car_number = $phoneNumber;
+			$customer->car_number = $carNumber;
 		}
 		if ( $customer->comment != $comment ) {
 			$update = true;

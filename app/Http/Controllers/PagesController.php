@@ -8,6 +8,8 @@ use App\Enums\TopPage;
 use App\Services\TopNavBar;
 use App\Models\Apartment;
 use App\Models\Inventory;
+use App\Models\Customer;
+use App\Repositories\CustomerRepository;
 
 class PagesController extends Controller {
 	protected TopNavBar $topNavBar;
@@ -55,8 +57,30 @@ class PagesController extends Controller {
 		return view( 'components.pages.'.TopPage::Reservs->value, [ 'top_nav_items' => $this->topNavBar->items( ) ] );
 	}
 	
-	public function customers( ) : View {
-		return view( 'components.pages.'.TopPage::Customers->value, [ 'top_nav_items' => $this->topNavBar->items( ) ] );
+	public function customers( Request $request, CustomerRepository $customers ) : View {
+		$columns = [
+			( object ) [ 'fieldName' => 'name',			'title' => __( 'Имя'			) ],
+			( object ) [ 'fieldName' => 'phone_number',	'title' => __( 'Телефон'		) ],
+			( object ) [ 'fieldName' => 'car_number',	'title' => __( 'Номер машины'	) ]
+		];
+		
+		return view( 'components.pages.'.TopPage::Customers->value, [
+			'top_nav_items' => $this->topNavBar->items( ),
+			'customers' => $customers->List( ( int ) $request->input( 'page' ) ),
+			'columns' => $columns,
+			'baseUrl' => url( '/customers' ),
+			'linkFieldName' => 'name',
+			'editFieldName' => 'id',
+			'newEntityUrl' => url( '/customers/add' )
+		] );
+	}
+	
+	public function newCustomer( ) : View {
+		return view( 'components.pages.customer-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'customer' => new Customer ] );
+	}
+	
+	public function editCustomer( Customer $customer ) : View {
+		return view( 'components.pages.customer-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'customer' => $customer ] );
 	}
 	
 	public function inventories( ) : View {
