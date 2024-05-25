@@ -10,7 +10,7 @@ class TopNavBar {
 	public static function TopPageTitle( TopPage $page ) : string {
 		return match( $page ) {
 			TopPage::Main			=> __( 'Календарь' ),
-			TopPage::Reservs		=> __( 'Заявки' ),
+			TopPage::Orders			=> __( 'Заявки' ),
 			TopPage::Apartments		=> __( 'Апартаменты' ),
 			TopPage::Customers		=> __( 'Клиенты' ),
 			TopPage::Inventories	=> __( 'Инвентарь' )
