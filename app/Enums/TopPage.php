@@ -6,7 +6,7 @@ namespace App\Enums;
  */
 enum TopPage : string {
 	case Main = 'main';
-	case Reservs = 'reservs';
+	case Orders = 'orders';
 	case Apartments = 'apartments';
 	case Customers = 'customers';
 	case Inventories = 'inventories';
