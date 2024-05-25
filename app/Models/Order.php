@@ -26,13 +26,12 @@ use App\Enums\OrderStatus;
 class Order extends Model {
 	use HasFactory;
 	
-	protected $casts = [ 'from' => 'datetime', 'to' => 'datetime' ];
-	
-	public function status( ) : Attribute {
-		return Attribute::make(
-			get: fn( $value ) => OrderStatus::from( ( int ) $value )->value,
-			set: fn( $value ) => $value instanceof OrderStatus ? $value->value : OrderStatus::from( ( int ) $value )->value
-		);
+	protected function casts( ) : array {
+		return [
+			'from' => 'datetime',
+			'to' => 'datetime',
+			'status' => OrderStatus::class
+		];
 	}
 	
 	public function customer( ) : BelongsTo {
