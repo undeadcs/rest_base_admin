@@ -16,7 +16,7 @@ class CustomersTest extends TestCase {
 		
 		$this->getJson( '/api/customers' )
 			->assertStatus( 200 )
-			->assertJson( $customers->sortBy( 'name' )->slice( 0, 25 )->values( )->toArray( ) );
+			->assertJson( [ 'totalCount' => $totalCount, 'data' => $customers->sortBy( 'name' )->slice( 0, 25 )->values( )->toArray( ) ] );
 	}
 	
 	public function test_listing_second_page( ) : void {
@@ -25,7 +25,7 @@ class CustomersTest extends TestCase {
 		
 		$this->getJson( '/api/customers/?page=2' )
 			->assertStatus( 200 )
-			->assertJson( $customers->sortBy( 'name' )->slice( 25, 25 )->values( )->toArray( ) );
+			->assertJson( [ 'totalCount' => $totalCount, 'data' => $customers->sortBy( 'name' )->slice( 25, 25 )->values( )->toArray( ) ] );
 	}
 	
 	public function test_instance( ) : void {
