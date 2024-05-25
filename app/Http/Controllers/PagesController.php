@@ -53,10 +53,6 @@ class PagesController extends Controller {
 		return view( 'components.pages.apartment-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'apartment' => $apartment ] );
 	}
 	
-	public function reservs( ) : View {
-		return view( 'components.pages.'.TopPage::Reservs->value, [ 'top_nav_items' => $this->topNavBar->items( ) ] );
-	}
-	
 	public function customers( Request $request, CustomerRepository $customers ) : View {
 		$columns = [
 			( object ) [ 'fieldName' => 'name',			'title' => __( 'Имя'			) ],

@@ -1,10 +1,10 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApartmentsController;
 use App\Http\Controllers\Api\InventoriesController;
 use App\Http\Controllers\Api\CustomersController;
+use App\Http\Controllers\Api\OrdersController;
 
 Route::controller( ApartmentsController::class )->prefix( 'apartments' )->group( function( ) {
 	Route::get( '/', 'index' );
@@ -21,4 +21,9 @@ Route::controller( InventoriesController::class )->prefix( 'inventories' )->grou
 Route::controller( CustomersController::class )->prefix( 'customers' )->group( function( ) {
 	Route::get( '/', 'index' );
 	Route::get( '/{customer}', 'instance' );
+} );
+
+Route::controller( OrdersController::class )->prefix( 'orders' )->group( function( ) {
+	Route::get( '/', 'index' );
+	Route::get( '/{order}', 'instance' );
 } );
