@@ -11,7 +11,9 @@ Route::controller( PagesController::class )->group( function( ) {
 	Route::get( '/apartments', 'apartments' )->name( 'page_apartments' );
 	Route::get( '/apartments/add', 'newApartment' );
 	Route::get( '/apartments/{apartment}', 'editApartment' );
-	Route::get( '/reservs', 'reservs' )->name( 'page_reservs' );
+	Route::get( '/orders', 'orders' )->name( 'page_orders' );
+	Route::get( '/orders/add', 'newOrder' );
+	Route::get( '/orders/{order}', 'editOrder' );
 	Route::get( '/customers', 'customers' )->name( 'page_customers' );
 	Route::get( '/customers/add', 'newCustomer' );
 	Route::get( '/customers/{customer}', 'editCustomer' );
