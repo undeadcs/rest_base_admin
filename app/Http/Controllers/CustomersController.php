@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Repositories\CustomerRepository;
 use App\Http\Requests\CustomerRequest;
 use Illuminate\Http\RedirectResponse;

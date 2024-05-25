@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\ApartmentRequest;
 use App\Models\Apartment;
-use App\Models\ApartmentPrice;
 use App\Repositories\ApartmentRepository;
 
 class ApartmentsController extends Controller {

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Repositories\InventoryRepository;
 use App\Http\Requests\InventoryRequest;
 use Illuminate\Http\RedirectResponse;

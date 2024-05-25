@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Repositories\InventoryRepository;
 use Illuminate\Http\JsonResponse;
 use App\Models\Inventory;
