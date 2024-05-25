@@ -9,6 +9,7 @@ use App\Models\Apartment;
 use App\Models\Inventory;
 use App\Models\Customer;
 use App\Repositories\CustomerRepository;
+use Illuminate\Http\Request;
 
 class PagesController extends Controller {
 	protected TopNavBar $topNavBar;
