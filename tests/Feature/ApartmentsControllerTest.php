@@ -25,7 +25,10 @@ class ApartmentsControllerTest extends TestCase {
 		];
 		
 		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment ) {
-			$mock->shouldReceive( 'Add' )->with( $apartment->title, $apartment->number, $apartment->capacity, $apartment->comment )->andReturn( null );
+			$mock->shouldReceive( 'Add' )
+				->with( $apartment->title, $apartment->number, $apartment->capacity, $apartment->comment )
+				->once( )
+				->andReturn( null );
 		} ) );
 		
 		$url = '/apartments/add';
@@ -44,8 +47,14 @@ class ApartmentsControllerTest extends TestCase {
 		];
 		
 		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment, $price ) {
-			$mock->shouldReceive( 'Add' )->with( $apartment->title, $apartment->number, $apartment->capacity, $apartment->comment )->andReturn( $apartment );
-			$mock->shouldReceive( 'PriceAdd' )->with( $apartment, $price )->andReturn( null );
+			$mock->shouldReceive( 'Add' )
+				->with( $apartment->title, $apartment->number, $apartment->capacity, $apartment->comment )
+				->once( )
+				->andReturn( $apartment );
+			$mock->shouldReceive( 'PriceAdd' )
+				->with( $apartment, $price )
+				->once( )
+				->andReturn( null );
 		} ) );
 		
 		$url = '/apartments/add';
@@ -69,6 +78,7 @@ class ApartmentsControllerTest extends TestCase {
 					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->number, $updateApartment->capacity,
 					$updateApartment->comment
 				)
+				->once( )
 				->andReturn( false );
 		} ) );
 		
@@ -108,8 +118,12 @@ class ApartmentsControllerTest extends TestCase {
 					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->number, $updateApartment->capacity,
 					$updateApartment->comment
 				)
+				->once( )
 				->andReturn( true );
-			$mock->shouldReceive( 'PriceAdd' )->with( $this->ApartmentArgument( $apartment ), $newPrice )->andReturn( null );
+			$mock->shouldReceive( 'PriceAdd' )
+				->with( $this->ApartmentArgument( $apartment ), $newPrice )
+				->once( )
+				->andReturn( null );
 		} ) );
 		
 		$url = '/apartments/'.$apartment->id;
@@ -134,6 +148,7 @@ class ApartmentsControllerTest extends TestCase {
 					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->number, $updateApartment->capacity,
 					$updateApartment->comment
 				)
+				->once( )
 				->andReturn( true );
 			$mock->shouldNotReceive( 'PriceAdd' );
 		} ) );
@@ -160,9 +175,11 @@ class ApartmentsControllerTest extends TestCase {
 					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->number, $updateApartment->capacity,
 					$updateApartment->comment
 				)
+				->once( )
 				->andReturn( true );
 			$mock->shouldReceive( 'PriceAdd' )
 				->with( $this->ApartmentArgument( $apartment ), $price )
+				->once( )
 				->andReturn( ApartmentPrice::factory( )->state( [ 'apartment_id' => $apartment ] )->create( ) );
 		} ) );
 		
@@ -189,9 +206,11 @@ class ApartmentsControllerTest extends TestCase {
 					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->number, $updateApartment->capacity,
 					$updateApartment->comment
 				)
+				->once( )
 				->andReturn( true );
 			$mock->shouldReceive( 'PriceAdd' )
 				->with( $this->ApartmentArgument( $apartment ), $newPrice )
+				->once( )
 				->andReturn( ApartmentPrice::factory( )->state( [ 'apartment_id' => $apartment ] )->create( ) );
 		} ) );
 		

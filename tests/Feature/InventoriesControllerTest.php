@@ -22,7 +22,7 @@ class InventoriesControllerTest extends TestCase {
 		];
 		
 		$this->instance( InventoryRepository::class, \Mockery::mock( InventoryRepository::class, function( MockInterface $mock ) use ( $inventory ) {
-			$mock->shouldReceive( 'Add' )->with( $inventory->title )->andReturn( null );
+			$mock->shouldReceive( 'Add' )->with( $inventory->title )->once( )->andReturn( null );
 		} ) );
 		
 		$url = '/inventories/add';
@@ -38,8 +38,8 @@ class InventoriesControllerTest extends TestCase {
 		];
 		
 		$this->instance( InventoryRepository::class, \Mockery::mock( InventoryRepository::class, function( MockInterface $mock ) use ( $inventory, $price ) {
-			$mock->shouldReceive( 'Add' )->with( $inventory->title )->andReturn( $inventory );
-			$mock->shouldReceive( 'PriceAdd' )->with( $inventory, $price )->andReturn( null );
+			$mock->shouldReceive( 'Add' )->with( $inventory->title )->once( )->andReturn( $inventory );
+			$mock->shouldReceive( 'PriceAdd' )->with( $inventory, $price )->once( )->andReturn( null );
 		} ) );
 		
 		$url = '/inventories/add';
@@ -54,8 +54,8 @@ class InventoriesControllerTest extends TestCase {
 		];
 		
 		$this->instance( InventoryRepository::class, \Mockery::mock( InventoryRepository::class, function( MockInterface $mock ) use ( $inventory ) {
-			$mock->shouldReceive( 'Add' )->with( $inventory->title )->andReturn( $inventory );
-			$mock->shouldReceive( 'PriceAdd' )->with( $inventory, $inventory->currentPrice->price )->andReturn( $inventory->currentPrice );
+			$mock->shouldReceive( 'Add' )->with( $inventory->title )->once( )->andReturn( $inventory );
+			$mock->shouldReceive( 'PriceAdd' )->with( $inventory, $inventory->currentPrice->price )->once( )->andReturn( $inventory->currentPrice );
 		} ) );
 		
 		$this->from( '/inventories/add' )->post( '/inventories', $data )->assertRedirect( '/inventories' );
@@ -70,7 +70,7 @@ class InventoriesControllerTest extends TestCase {
 		];
 		
 		$this->instance( InventoryRepository::class, \Mockery::mock( InventoryRepository::class, function( MockInterface $mock ) use ( $inventory, $updateInventory ) {
-			$mock->shouldReceive( 'Update' )->with( $this->InventoryArgument( $inventory ), $updateInventory->title )->andReturn( false );
+			$mock->shouldReceive( 'Update' )->with( $this->InventoryArgument( $inventory ), $updateInventory->title )->once( )->andReturn( false );
 		} ) );
 		
 		$url = '/inventories/'.$inventory->id;
@@ -100,8 +100,9 @@ class InventoriesControllerTest extends TestCase {
 		$this->instance( InventoryRepository::class, \Mockery::mock( InventoryRepository::class, function( MockInterface $mock ) use ( $inventory, $updateInventory, $newPrice ) {
 			$mock->shouldReceive( 'Update' )
 				->with( $this->InventoryArgument( $inventory ), $updateInventory->title )
+				->once( )
 				->andReturn( true );
-			$mock->shouldReceive( 'PriceAdd' )->with( $this->InventoryArgument( $inventory ), $newPrice )->andReturn( null );
+			$mock->shouldReceive( 'PriceAdd' )->with( $this->InventoryArgument( $inventory ), $newPrice )->once( )->andReturn( null );
 		} ) );
 		
 		$url = '/inventories/'.$inventory->id;
@@ -120,6 +121,7 @@ class InventoriesControllerTest extends TestCase {
 		$this->instance( InventoryRepository::class, \Mockery::mock( InventoryRepository::class, function( MockInterface $mock ) use ( $inventory, $updateInventory, $price ) {
 			$mock->shouldReceive( 'Update' )
 				->with( $this->InventoryArgument( $inventory ), $updateInventory->title )
+				->once( )
 				->andReturn( true );
 			$mock->shouldNotReceive( 'PriceAdd' );
 		} ) );
@@ -140,9 +142,11 @@ class InventoriesControllerTest extends TestCase {
 		$this->instance( InventoryRepository::class, \Mockery::mock( InventoryRepository::class, function( MockInterface $mock ) use ( $inventory, $updateInventory, $price ) {
 			$mock->shouldReceive( 'Update' )
 				->with( $this->InventoryArgument( $inventory ), $updateInventory->title )
+				->once( )
 				->andReturn( true );
 			$mock->shouldReceive( 'PriceAdd' )
 				->with( $this->InventoryArgument( $inventory ), $price )
+				->once( )
 				->andReturn( InventoryPrice::factory( )->state( [ 'inventory_id' => $inventory ] )->create( ) );
 		} ) );
 		
@@ -163,9 +167,11 @@ class InventoriesControllerTest extends TestCase {
 		$this->instance( InventoryRepository::class, \Mockery::mock( InventoryRepository::class, function( MockInterface $mock ) use ( $inventory, $updateInventory, $newPrice ) {
 			$mock->shouldReceive( 'Update' )
 				->with( $this->InventoryArgument( $inventory ), $updateInventory->title )
+				->once( )
 				->andReturn( true );
 			$mock->shouldReceive( 'PriceAdd' )
 				->with( $this->InventoryArgument( $inventory ), $newPrice )
+				->once( )
 				->andReturn( InventoryPrice::factory( )->state( [ 'inventory_id' => $inventory ] )->create( ) );
 		} ) );
 		

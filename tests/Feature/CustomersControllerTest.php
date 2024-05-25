@@ -23,7 +23,10 @@ class CustomersControllerTest extends TestCase {
 		];
 		
 		$this->instance( CustomerRepository::class, \Mockery::mock( CustomerRepository::class, function( MockInterface $mock ) use ( $customer ) {
-			$mock->shouldReceive( 'Add' )->with( $customer->name, $customer->phone_number, $customer->car_number, $customer->comment )->andReturn( null );
+			$mock->shouldReceive( 'Add' )
+				->with( $customer->name, $customer->phone_number, $customer->car_number, $customer->comment )
+				->once( )
+				->andReturn( null );
 		} ) );
 		
 		$url = '/customers/add';
@@ -40,7 +43,10 @@ class CustomersControllerTest extends TestCase {
 		];
 		
 		$this->instance( CustomerRepository::class, \Mockery::mock( CustomerRepository::class, function( MockInterface $mock ) use ( $customer ) {
-			$mock->shouldReceive( 'Add' )->with( $customer->name, $customer->phone_number, $customer->car_number, $customer->comment )->andReturn( $customer );
+			$mock->shouldReceive( 'Add' )
+				->with( $customer->name, $customer->phone_number, $customer->car_number, $customer->comment )
+				->once( )
+				->andReturn( $customer );
 		} ) );
 		
 		$this->from( '/customers/add' )->post( '/customers', $data )->assertRedirect( '/customers' );
@@ -75,6 +81,7 @@ class CustomersControllerTest extends TestCase {
 					$this->CustomerArgument( $customer ), $updateCustomer->name, $updateCustomer->phone_number, $updateCustomer->car_number,
 					$updateCustomer->comment
 				)
+				->once( )
 				->andReturn( false );
 		} ) );
 		
@@ -98,6 +105,7 @@ class CustomersControllerTest extends TestCase {
 					$this->CustomerArgument( $customer ), $updateCustomer->name, $updateCustomer->phone_number, $updateCustomer->car_number,
 					$updateCustomer->comment
 				)
+				->once( )
 				->andReturn( true );
 		} ) );
 		
