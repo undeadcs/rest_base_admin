@@ -1,12 +1,14 @@
 @if ( $newEntityUrl )
 <div>
-<a class="btn btn-success" href="{{ $newEntityUrl }}">{{ __( 'Добавить' ) }}</a>
+	<a class="btn btn-success" href="{{ $newEntityUrl }}">{{ __( 'Добавить' ) }}</a>
 </div>
 @endif
-<table class="table">
+<table class="table table-striped">
+<thead><tr>
 @foreach( $columns as $column )
 <th class="col col-for-{{ $column->fieldName }}">{{ $column->title }}</th>
 @endforeach
+</tr></thead><tbody>
 @foreach( $instances as $instance )
 <tr>
 	@foreach( $columns as $column )
@@ -20,7 +22,7 @@
 	@endforeach
 </tr>
 @endforeach
-</table>
+</tbody></table>
 @if ( $attributes->has( 'last-page' ) )
 <nav><ul class="pagination justify-content-center">
 @for( $pageNumber = 1; $pageNumber <= $attributes->get( 'last-page' ); ++$pageNumber )
