@@ -18,7 +18,7 @@ class OrderFactory extends Factory {
 	 * @return array<string, mixed>
 	 */
 	public function definition( ) : array {
-		$apartment = Apartment::factory( );
+		$apartment = Apartment::factory( )->hasPrices( 2 );
 		
 		return [
 			'created_at'			=> $this->faker->dateTime( ),

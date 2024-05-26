@@ -5,6 +5,7 @@ use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ApartmentsController;
 use App\Http\Controllers\InventoriesController;
 use App\Http\Controllers\CustomersController;
+use App\Http\Controllers\OrdersController;
 
 Route::controller( PagesController::class )->group( function( ) {
 	Route::get( '/', 'main' )->name( 'page_main' );
@@ -35,4 +36,9 @@ Route::controller( InventoriesController::class )->group( function( ) {
 Route::controller( CustomersController::class )->group( function( ) {
 	Route::post( '/customers', 'add' );
 	Route::put( '/customers/{customer}', 'update' );
+} );
+
+Route::controller( OrdersController::class )->group( function( ) {
+	Route::post( '/orders', 'add' );
+	Route::put( '/orders/{order}', 'update' );
 } );

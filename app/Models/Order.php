@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use App\Enums\OrderStatus;
 
 /**
@@ -28,9 +27,9 @@ class Order extends Model {
 	
 	protected function casts( ) : array {
 		return [
-			'from' => 'datetime',
-			'to' => 'datetime',
-			'status' => OrderStatus::class
+			'from'		=> 'datetime',
+			'to'		=> 'datetime',
+			'status'	=> OrderStatus::class
 		];
 	}
 	
@@ -42,7 +41,7 @@ class Order extends Model {
 		return $this->belongsTo( Apartment::class );
 	}
 	
-	public function price( ) : BelongsTo {
+	public function apartmentPrice( ) : BelongsTo {
 		return $this->belongsTo( ApartmentPrice::class );
 	}
 }

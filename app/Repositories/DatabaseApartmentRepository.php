@@ -6,8 +6,8 @@ use App\Models\Apartment;
 use App\Models\ApartmentPrice;
 
 class DatabaseApartmentRepository implements ApartmentRepository {
-	public function List(  ) : Collection {
-		return Apartment::orderBy( 'number', 'desc' )->get( );
+	public function List( ) : Collection {
+		return Apartment::orderBy( 'number', 'desc' )->with( 'currentPrice' )->get( );
 	}
 	
 	public function Find( int $id ) : Apartment {
