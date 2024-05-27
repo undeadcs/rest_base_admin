@@ -20,6 +20,7 @@ Route::controller( InventoriesController::class )->prefix( 'inventories' )->grou
 
 Route::controller( CustomersController::class )->prefix( 'customers' )->group( function( ) {
 	Route::get( '/', 'index' );
+	Route::get( '/find-for-order', 'findForOrder' );
 	Route::get( '/{customer}', 'instance' );
 } );
 

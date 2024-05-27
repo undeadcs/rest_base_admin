@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Customer;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class DatabaseCustomerRepository implements CustomerRepository {
 	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
@@ -45,5 +46,17 @@ class DatabaseCustomerRepository implements CustomerRepository {
 		}
 		
 		return !$update || $customer->save( );
+	}
+	
+	public function SearchByPhoneNumberPart( string $phoneNumberPart, int $limit = 5 ) : Collection {
+		return Customer::orderBy( 'name', 'asc' )->limit( $limit )->where( 'phone_number', 'LIKE', '%'.$phoneNumberPart.'%' )->get( );
+	}
+	
+	public function SearchByCarNumberPart( string $carNumberPart, int $limit = 5 ) : Collection {
+		return Customer::orderBy( 'name', 'asc' )->limit( $limit )->where( 'car_number', 'LIKE', '%'.$carNumberPart.'%' )->get( );
+	}
+	
+	public function SearchByNamePart( string $namePart, int $limit = 5 ) : Collection {
+		return Customer::orderBy( 'name', 'asc' )->limit( $limit )->where( 'name', 'LIKE', '%'.$namePart.'%' )->get( );
 	}
 }
