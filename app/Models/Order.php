@@ -14,8 +14,11 @@ use App\Enums\OrderStatus;
  * @property string $created_at
  * @property string $updated_at
  * @property int $customer_id
+ * @property Customer $customer
  * @property int $apartment_id
+ * @property Apartment $apartment
  * @property int $apartment_price_id
+ * @property ApartmentPrice $apartmentPrice
  * @property OrderStatus $status
  * @property string $from
  * @property string $to

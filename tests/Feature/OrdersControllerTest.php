@@ -84,8 +84,8 @@ class OrdersControllerTest extends TestCase {
 		$data = [
 			'apartment_id'	=> $apartment->id,
 			'customer_id'	=> $customer->id,
-			'from'			=> $order->from->format( 'Y-m-d' ),
-			'to'			=> $order->to->format( 'Y-m-d' ),
+			'from'			=> $order->from->format( 'd.m.Y' ),
+			'to'			=> $order->to->format( 'd.m.Y' ),
 			'persons_number' => $order->persons_number,
 			'comment'		=> $order->comment
 		];
@@ -102,8 +102,8 @@ class OrdersControllerTest extends TestCase {
 		$data = [
 			'apartment_id'	=> $order->apartment->id,
 			'customer_id'	=> $order->customer->id,
-			'from'			=> $order->from->format( 'Y-m-d' ),
-			'to'			=> $order->to->format( 'Y-m-d' ),
+			'from'			=> $order->from->format( 'd.m.Y' ),
+			'to'			=> $order->to->format( 'd.m.Y' ),
 			'persons_number' => $order->persons_number,
 			'comment'		=> $order->comment
 		];
@@ -157,8 +157,8 @@ class OrdersControllerTest extends TestCase {
 			'apartment_id'	=> $order->apartment->id,
 			'customer_id'	=> $order->customer->id,
 			'status'		=> $updateOrder->status->value,
-			'from'			=> $updateOrder->from->format( 'Y-m-d' ),
-			'to'			=> $updateOrder->to->format( 'Y-m-d' ),
+			'from'			=> $updateOrder->from->format( 'd.m.Y' ),
+			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
 			'persons_number' => $updateOrder->persons_number,
 			'comment'		=> $updateOrder->comment
 		];
@@ -178,8 +178,8 @@ class OrdersControllerTest extends TestCase {
 			'apartment_id'	=> $order->apartment->id,
 			'customer_id'	=> $order->customer->id,
 			'status'		=> $updateOrder->status->value,
-			'from'			=> $updateOrder->from->format( 'Y-m-d' ),
-			'to'			=> $updateOrder->to->format( 'Y-m-d' ),
+			'from'			=> $updateOrder->from->format( 'd.m.Y' ),
+			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
 			'persons_number' => $updateOrder->persons_number,
 			'comment'		=> $updateOrder->comment
 		];

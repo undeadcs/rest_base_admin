@@ -13,7 +13,9 @@
 <tr>
 	@foreach( $columns as $column )
 	<td>
-		@if ( $column->fieldName == $linkFieldName )
+		@if ( $attributes->has( 'customs' ) && isset( $attributes->get( 'customs' )[ $column->fieldName ] ) )
+			{!! $attributes->get( 'customs' )[ $column->fieldName ]( $instance ) !!}
+		@elseif ( $column->fieldName == $linkFieldName )
 			<a href="{{ $editLink( $instance ) }}">{{ $instance->{ $column->fieldName } }}</a>
 		@else
 			{{ $instance->{ $column->fieldName } }}

@@ -12,6 +12,7 @@ use App\Models\Order;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Models\Customer;
 use App\Enums\OrderStatus;
+use Illuminate\Support\Carbon;
 
 class OrdersController extends Controller {
 	protected OrderRepository $orders;
@@ -27,9 +28,11 @@ class OrdersController extends Controller {
 	public function add( AddOrderRequest $request ) : RedirectResponse {
 		$input = $request->validated( );
 		$customer = $this->customers->Find( $input[ 'customer_id' ] );
-		$apartment = $this->apartments->Find( ( int ) $input[ 'apartment_id' ] );
+		$apartment = $this->apartments->Find( $input[ 'apartment_id' ] );
+		$from = Carbon::createFromFormat( 'd.m.Y', $input[ 'from' ] )->format( 'Y-m-d' );
+		$to = Carbon::createFromFormat( 'd.m.Y', $input[ 'to' ] )->format( 'Y-m-d' );
 		
-		if ( !$this->orders->Add( $customer, $apartment, $input[ 'from' ], $input[ 'to' ], $input[ 'persons_number' ], $input[ 'comment' ] ) ) {
+		if ( !$this->orders->Add( $customer, $apartment, $from, $to, $input[ 'persons_number' ], $input[ 'comment' ] ) ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи о заявке' ) ] );
 		}
 		
@@ -40,9 +43,11 @@ class OrdersController extends Controller {
 		$input = $request->validated( );
 		$customer = $this->customers->Find( $input[ 'customer_id' ] );
 		$apartment = $this->apartments->Find( $input[ 'apartment_id' ] );
+		$from = Carbon::createFromFormat( 'd.m.Y', $input[ 'from' ] )->format( 'Y-m-d' );
+		$to = Carbon::createFromFormat( 'd.m.Y', $input[ 'to' ] )->format( 'Y-m-d' );
 		$status = OrderStatus::from( $input[ 'status' ] );
 		
-		if ( !$this->orders->Update( $order, $customer, $apartment, $status, $input[ 'from' ], $input[ 'to' ], $input[ 'persons_number' ], $input[ 'comment' ] ) ) {
+		if ( !$this->orders->Update( $order, $customer, $apartment, $status, $from, $to, $input[ 'persons_number' ], $input[ 'comment' ] ) ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи о заявке' ) ] );
 		}
 		

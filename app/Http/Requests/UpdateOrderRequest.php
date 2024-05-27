@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Enums\OrderStatus;
+use Illuminate\Validation\Rule;
 
 class UpdateOrderRequest extends FormRequest {
 	/**
@@ -26,7 +27,7 @@ class UpdateOrderRequest extends FormRequest {
 			'to'			=> [ 'required', 'date' ],
 			'persons_number' => [ 'numeric' ],
 			'comment'		=> [ 'string', 'max:3000' ],
-			'status'		=> [ 'required', 'integer', 'min:'.OrderStatus::Pending->value, 'max:'.OrderStatus::Canceled->value ],
+			'status'		=> [ Rule::enum( OrderStatus::class ) ],
 		];
 	}
 }

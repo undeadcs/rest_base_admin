@@ -4,7 +4,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<title>{{ __( 'Админ турбазы' ) }}</title>
 	<link rel="stylesheet" href="{{ asset( 'css/bootstrap.css' ) }}"/>
+	{{ $styles ?? '' }}
 	<script src="{{ asset( 'js/bootstrap.js' ) }}"></script>
+	{{ $scripts ?? '' }}
 </head><body>
 {{ $slot }}
 </body></html>
