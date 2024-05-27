@@ -31,5 +31,9 @@ class AppServiceProvider extends ServiceProvider {
 	 */
 	public function boot( ) : void {
 		Route::pattern( 'id', '[0-9]+' );
+		Route::pattern( 'customer', '[0-9]+' );
+		Route::pattern( 'inventory', '[0-9]+' );
+		Route::pattern( 'apartment', '[0-9]+' );
+		Route::pattern( 'order', '[0-9]+' );
 	}
 }
