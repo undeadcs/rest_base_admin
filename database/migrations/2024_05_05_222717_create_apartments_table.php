@@ -15,7 +15,6 @@ return new class extends Migration {
 			$table->integer( 'number' );
 			$table->integer( 'capacity' );
 			$table->text( 'comment' );
-			$table->unique( 'number' );
 		} );
 	}
 
