@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $number
  * @property int $capacity
  * @property string $comment
+ * 
+ * @todo добавить тип {домик|палаточное место|гостиничный номер}
  */
 class Apartment extends Model {
 	use HasFactory;
