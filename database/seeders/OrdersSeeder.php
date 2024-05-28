@@ -10,23 +10,23 @@ use App\Models\Order;
 use App\Models\Customer;
 
 class OrdersSeeder extends Seeder {
+	use WithoutModelEvents;
+	
 	/**
 	 * Run the database seeds.
 	 */
 	public function run( ) : void {
-		$apartments = Apartment::factory( )
-			->hasPrices( 3 )
-			->count( 20 )
-			->state( new Sequence( fn( Sequence $sequence ) => [
-				'title' => 'База 1, домик #'.$sequence->index + 1,
-				'number' => $sequence->index + 1
-			] ) )
-			->create( );
+		$this->call( ApartmentsSeeder::class );
 		
-		Order::factory( )
-			->count( 60 )
-			->recycle( $apartments )
-			->has( Customer::factory( ) )
-			->create( );
+		$apartments = Apartment::all( );
+		
+		$apartments->each( function( Apartment $apartment ) {
+			Order::factory( )
+				->count( mt_rand( 1, 3 ) )
+				->has( Customer::factory( ) )
+				->for( $apartment )
+				->for( $apartment->currentPrice )
+				->create( );
+		} );
 	}
 }
