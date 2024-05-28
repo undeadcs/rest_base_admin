@@ -44,6 +44,7 @@ class DatabaseOrderRepository implements OrderRepository {
 		if ( $order->apartment_id != $apartment->id ) {
 			$update = true;
 			$order->apartment( )->associate( $apartment );
+			$order->apartmentPrice( )->associate( $apartment->currentPrice );
 		}
 		if ( $order->status != $status ) {
 			$update = true;
