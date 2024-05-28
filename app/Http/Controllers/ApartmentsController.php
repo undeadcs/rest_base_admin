@@ -6,6 +6,7 @@ use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\ApartmentRequest;
 use App\Models\Apartment;
 use App\Repositories\ApartmentRepository;
+use App\Enums\ApartmentType;
 
 class ApartmentsController extends Controller {
 	protected ApartmentRepository $apartments;
@@ -17,7 +18,9 @@ class ApartmentsController extends Controller {
 	public function add( ApartmentRequest $request ) : RedirectResponse {
 		$input = $request->validated( );
 		
-		$apartment = $this->apartments->Add( $input[ 'title' ], ( int ) $input[ 'number' ], ( int ) $input[ 'capacity' ], $input[ 'comment' ] );
+		$apartment = $this->apartments->Add(
+			$input[ 'title' ], ApartmentType::from( $input[ 'type' ] ), $input[ 'number' ], $input[ 'capacity' ], $input[ 'comment' ]
+		);
 		if ( !$apartment ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи' ) ] );
 		}
@@ -31,7 +34,9 @@ class ApartmentsController extends Controller {
 	public function update( Apartment $apartment, ApartmentRequest $request ) : RedirectResponse {
 		$input = $request->validated( );
 		
-		if ( !$this->apartments->Update( $apartment, $input[ 'title' ], ( int ) $input[ 'number' ], ( int ) $input[ 'capacity' ], $input[ 'comment' ] ) ) {
+		if ( !$this->apartments->Update(
+			$apartment, $input[ 'title' ], ApartmentType::from( $input[ 'type' ] ), $input[ 'number' ], $input[ 'capacity' ], $input[ 'comment' ]
+		) ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи' ) ] );
 		}
 		

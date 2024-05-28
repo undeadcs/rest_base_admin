@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Enums\ApartmentType;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Apartment>
@@ -18,6 +19,7 @@ class ApartmentFactory extends Factory {
 			'title'		=> $this->faker->text( 32 ),
 			'number'	=> $this->faker->unique( )->randomNumber( ),
 			'capacity'	=> $this->faker->randomNumber( ),
+			'type'		=> $this->faker->randomElement( ApartmentType::class ),
 			'comment'	=> $this->faker->text( )
 		];
 	}

@@ -10,6 +10,14 @@
 	<div class="form-text">{{ __( 'для показа в календаре и заявках. стоит как-то систематически их называть, чтобы исключить путаницу' ) }}</div>
 </div>
 <div class="mb-3">
+	<label for="type" class="form-label">{{ __( 'Тип' ) }}</label>
+	<select id="type" class="form-select" name="type">
+	@foreach( $types as $value => $title )
+	<option value="{{ $value }}"@if ( $apartment->type->value == $value ) selected="selected" @endif>{{ $title }}</option>
+	@endforeach
+	</select>
+</div>
+<div class="mb-3">
 	<label for="number">{{ __( 'Номер' ) }}</label>
 	<input id="number" class="form-control" type="text" name="number" value="{{ $apartment->number }}"/>
 	<div class="form-text">{{ __( 'уникальный номер среди всех. например: 15' ) }}</div>

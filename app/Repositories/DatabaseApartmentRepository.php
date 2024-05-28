@@ -4,6 +4,7 @@ namespace App\Repositories;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Apartment;
 use App\Models\ApartmentPrice;
+use App\Enums\ApartmentType;
 
 class DatabaseApartmentRepository implements ApartmentRepository {
 	public function List( ) : Collection {
@@ -14,22 +15,27 @@ class DatabaseApartmentRepository implements ApartmentRepository {
 		return Apartment::findOrFail( $id );
 	}
 	
-	public function Add( string $title, int $number, int $capacity, string $comment ) : ?Apartment {
+	public function Add( string $title, ApartmentType $type, int $number, int $capacity, string $comment ) : ?Apartment {
 		$apartment = new Apartment;
-		$apartment->title = $title;
-		$apartment->number = $number;
-		$apartment->capacity = $capacity;
-		$apartment->comment = $comment;
+		$apartment->title		= $title;
+		$apartment->number		= $number;
+		$apartment->type		= $type;
+		$apartment->capacity	= $capacity;
+		$apartment->comment		= $comment;
 		
 		return $apartment->save( ) ? $apartment : null;
 	}
 	
-	public function Update( Apartment $apartment, string $title, int $number, int $capacity, string $comment ) : bool {
+	public function Update( Apartment $apartment, string $title, ApartmentType $type, int $number, int $capacity, string $comment ) : bool {
 		$update = false;
 		
 		if ( $apartment->title != $title ) {
 			$update = true;
 			$apartment->title = $title;
+		}
+		if ( $apartment->type != $type ) {
+			$update = true;
+			$apartment->type = $type;
 		}
 		if ( $apartment->number != $number ) {
 			$update = true;

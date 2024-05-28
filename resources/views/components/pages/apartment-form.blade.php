@@ -2,5 +2,5 @@
 	<x-top-nav :items="$top_nav_items"/>
 	<h1>@if ( $apartment->id ) {{ __( 'Изменение данных апартаментов' ) }} @else {{ __( 'Добавление апартаментов' ) }} @endif</h1>
 	<x-errors/>
-	<x-forms.apartment :apartment="$apartment"/>
+	<x-forms.apartment :apartment="$apartment" :types="$types"/>
 </div></x-layout>

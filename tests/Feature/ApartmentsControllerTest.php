@@ -19,6 +19,7 @@ class ApartmentsControllerTest extends TestCase {
 		$data = [
 			'title'		=> $apartment->title,
 			'number'	=> $apartment->number,
+			'type'		=> $apartment->type->value,
 			'capacity'	=> $apartment->capacity,
 			'price'		=> $this->faker->randomFloat( ),
 			'comment'	=> $apartment->comment
@@ -26,7 +27,7 @@ class ApartmentsControllerTest extends TestCase {
 		
 		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment ) {
 			$mock->shouldReceive( 'Add' )
-				->with( $apartment->title, $apartment->number, $apartment->capacity, $apartment->comment )
+				->with( $apartment->title, $apartment->type, $apartment->number, $apartment->capacity, $apartment->comment )
 				->once( )
 				->andReturn( null );
 		} ) );
@@ -41,6 +42,7 @@ class ApartmentsControllerTest extends TestCase {
 		$data = [
 			'title'		=> $apartment->title,
 			'number'	=> $apartment->number,
+			'type'		=> $apartment->type->value,
 			'capacity'	=> $apartment->capacity,
 			'price'		=> $price,
 			'comment'	=> $apartment->comment
@@ -48,7 +50,7 @@ class ApartmentsControllerTest extends TestCase {
 		
 		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment, $price ) {
 			$mock->shouldReceive( 'Add' )
-				->with( $apartment->title, $apartment->number, $apartment->capacity, $apartment->comment )
+				->with( $apartment->title, $apartment->type, $apartment->number, $apartment->capacity, $apartment->comment )
 				->once( )
 				->andReturn( $apartment );
 			$mock->shouldReceive( 'PriceAdd' )
@@ -67,6 +69,7 @@ class ApartmentsControllerTest extends TestCase {
 		$data = [
 			'title'		=> $updateApartment->title,
 			'number'	=> $updateApartment->number,
+			'type'		=> $apartment->type->value,
 			'capacity'	=> $updateApartment->capacity,
 			'price'		=> $this->faker->randomFloat( ),
 			'comment'	=> $updateApartment->comment
@@ -75,8 +78,8 @@ class ApartmentsControllerTest extends TestCase {
 		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment, $updateApartment ) {
 			$mock->shouldReceive( 'Update' )
 				->with(
-					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->number, $updateApartment->capacity,
-					$updateApartment->comment
+					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->type, $updateApartment->number,
+					$updateApartment->capacity, $updateApartment->comment
 				)
 				->once( )
 				->andReturn( false );
@@ -107,6 +110,7 @@ class ApartmentsControllerTest extends TestCase {
 		$data = [
 			'title'		=> $updateApartment->title,
 			'number'	=> $updateApartment->number,
+			'type'		=> $updateApartment->type->value,
 			'capacity'	=> $updateApartment->capacity,
 			'price'		=> $newPrice,
 			'comment'	=> $updateApartment->comment
@@ -115,8 +119,8 @@ class ApartmentsControllerTest extends TestCase {
 		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment, $updateApartment, $newPrice ) {
 			$mock->shouldReceive( 'Update' )
 				->with(
-					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->number, $updateApartment->capacity,
-					$updateApartment->comment
+					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->type, $updateApartment->number,
+					$updateApartment->capacity, $updateApartment->comment
 				)
 				->once( )
 				->andReturn( true );
@@ -137,6 +141,7 @@ class ApartmentsControllerTest extends TestCase {
 		$data = [
 			'title'		=> $updateApartment->title,
 			'number'	=> $updateApartment->number,
+			'type'		=> $updateApartment->type->value,
 			'capacity'	=> $updateApartment->capacity,
 			'price'		=> $price,
 			'comment'	=> $updateApartment->comment
@@ -145,8 +150,8 @@ class ApartmentsControllerTest extends TestCase {
 		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment, $updateApartment, $price ) {
 			$mock->shouldReceive( 'Update' )
 				->with(
-					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->number, $updateApartment->capacity,
-					$updateApartment->comment
+					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->type, $updateApartment->number,
+					$updateApartment->capacity, $updateApartment->comment
 				)
 				->once( )
 				->andReturn( true );
@@ -164,6 +169,7 @@ class ApartmentsControllerTest extends TestCase {
 		$data = [
 			'title'		=> $updateApartment->title,
 			'number'	=> $updateApartment->number,
+			'type'		=> $updateApartment->type->value,
 			'capacity'	=> $updateApartment->capacity,
 			'price'		=> $price,
 			'comment'	=> $updateApartment->comment
@@ -172,8 +178,8 @@ class ApartmentsControllerTest extends TestCase {
 		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment, $updateApartment, $price ) {
 			$mock->shouldReceive( 'Update' )
 				->with(
-					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->number, $updateApartment->capacity,
-					$updateApartment->comment
+					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->type, $updateApartment->number,
+					$updateApartment->capacity, $updateApartment->comment
 				)
 				->once( )
 				->andReturn( true );
@@ -195,6 +201,7 @@ class ApartmentsControllerTest extends TestCase {
 		$data = [
 			'title'		=> $updateApartment->title,
 			'number'	=> $updateApartment->number,
+			'type'		=> $updateApartment->type->value,
 			'capacity'	=> $updateApartment->capacity,
 			'price'		=> $newPrice,
 			'comment'	=> $updateApartment->comment
@@ -203,8 +210,8 @@ class ApartmentsControllerTest extends TestCase {
 		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment, $updateApartment, $newPrice ) {
 			$mock->shouldReceive( 'Update' )
 				->with(
-					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->number, $updateApartment->capacity,
-					$updateApartment->comment
+					$this->ApartmentArgument( $apartment ), $updateApartment->title, $updateApartment->type, $updateApartment->number,
+					$updateApartment->capacity, $updateApartment->comment
 				)
 				->once( )
 				->andReturn( true );

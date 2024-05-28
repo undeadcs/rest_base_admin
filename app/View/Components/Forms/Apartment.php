@@ -9,12 +9,14 @@ use App\Models\Apartment as ApartmentModel;
 
 class Apartment extends Component {
 	public ApartmentModel $apartment;
+	public array $types;
 	
 	/**
 	 * Create a new component instance.
 	 */
-	public function __construct( ApartmentModel $apartment ) {
+	public function __construct( ApartmentModel $apartment, array $types ) {
 		$this->apartment = $apartment;
+		$this->types = $types;
 	}
 
 	/**

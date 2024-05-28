@@ -14,6 +14,7 @@ use App\Models\Order;
 use App\Repositories\OrderRepository;
 use App\Repositories\ApartmentRepository;
 use App\Enums\OrderStatus;
+use App\Enums\ApartmentType;
 
 class PagesController extends Controller {
 	protected TopNavBar $topNavBar;
@@ -26,11 +27,7 @@ class PagesController extends Controller {
 		return view( 'components.pages.'.TopPage::Main->value, [ 'top_nav_items' => $this->topNavBar->items( ) ] );
 	}
 	
-	public function apartments( ) : View { // @todo ApartmentsRepository
-		$apartments = Apartment::orderBy( 'number', 'desc' )->with( 'currentPrice' )->get( );
-		$apartments->each( function( Apartment $apartment ) {
-			$apartment->price = $apartment->currentPrice ? $apartment->currentPrice->price : 0.0;
-		} );
+	public function apartments( ApartmentRepository $apartments ) : View {
 		$columns = [
 			( object ) [ 'fieldName' => 'title',	'title' => __( 'Наименование'	) ],
 			( object ) [ 'fieldName' => 'number',	'title' => __( 'Номер'			) ],
@@ -40,21 +37,40 @@ class PagesController extends Controller {
 		
 		return view( 'components.pages.'.TopPage::Apartments->value, [
 			'top_nav_items' => $this->topNavBar->items( ),
-			'apartments' => $apartments,
+			'apartments' => $apartments->List( ),
 			'columns' => $columns,
 			'baseUrl' => url( '/apartments' ),
 			'linkFieldName' => 'title',
 			'editFieldName' => 'id',
-			'newEntityUrl' => url( '/apartments/add' )
+			'newEntityUrl' => url( '/apartments/add' ),
+			'customs' => [
+				'price' => fn( Apartment $apartment ) => $apartment->currentPrice ? $apartment->currentPrice->price : '-'
+			]
 		] );
 	}
 	
+	protected function ApartmentTypes( ) : array {
+		return [
+			ApartmentType::House->value		=> ApartmentType::House->title( ),
+			ApartmentType::TentPlace->value	=> ApartmentType::TentPlace->title( ),
+			//ApartmentType::HotelRoom->value	=> ApartmentType::HotelRoom->title( )
+		];
+	}
+	
 	public function newApartment( ) : View {
-		return view( 'components.pages.apartment-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'apartment' => new Apartment ] );
+		return view( 'components.pages.apartment-form', [
+			'top_nav_items' => $this->topNavBar->items( ),
+			'apartment' => new Apartment,
+			'types' => $this->ApartmentTypes( )
+		] );
 	}
 	
 	public function editApartment( Apartment $apartment ) : View {
-		return view( 'components.pages.apartment-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'apartment' => $apartment ] );
+		return view( 'components.pages.apartment-form', [
+			'top_nav_items' => $this->topNavBar->items( ),
+			'apartment' => $apartment,
+			'types' => $this->ApartmentTypes( )
+		] );
 	}
 	
 	public function customers( Request $request, CustomerRepository $customers ) : View {

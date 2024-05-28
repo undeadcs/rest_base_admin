@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use App\Enums\ApartmentType;
 
 class ApartmentRequest extends FormRequest {
 	/**
@@ -21,6 +23,7 @@ class ApartmentRequest extends FormRequest {
 	public function rules( ) : array {
 		return [
 			'title'		=> [ 'required', 'min:1', 'max:50' ],
+			'type'		=> [ Rule::enum( ApartmentType::class ) ],
 			'number'	=> [ 'required', 'numeric' ],
 			'capacity'	=> [ 'required', 'numeric' ],
 			'price'		=> [ 'required', 'numeric' ],

@@ -14,6 +14,7 @@ return new class extends Migration {
 			$table->string( 'title' );
 			$table->integer( 'number' );
 			$table->integer( 'capacity' );
+			$table->smallInteger( 'type' );
 			$table->text( 'comment' );
 		} );
 	}
