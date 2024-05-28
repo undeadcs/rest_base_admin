@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Apartment;
-use Illuminate\Database\Eloquent\Factories\Sequence;
 use App\Models\Order;
 use App\Models\Customer;
 
