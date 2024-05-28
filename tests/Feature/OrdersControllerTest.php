@@ -54,6 +54,7 @@ class OrdersControllerTest extends TestCase {
 			// в фабрике id идет в конце из-за этого проваливается прямое сравнение объектов
 			$this->assertEquals( $value->id, $apartment->id );
 			$this->assertEquals( $value->title, $apartment->title );
+			$this->assertEquals( $value->type, $apartment->type );
 			$this->assertEquals( $value->number, $apartment->number );
 			$this->assertEquals( $value->capacity, $apartment->capacity );
 			$this->assertEquals( $value->comment, $apartment->comment );
