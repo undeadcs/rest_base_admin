@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Enums\OrderStatus;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Заявка на апартаменты
@@ -46,5 +47,9 @@ class Order extends Model {
 	
 	public function apartmentPrice( ) : BelongsTo {
 		return $this->belongsTo( ApartmentPrice::class );
+	}
+	
+	public function payments( ) : HasMany {
+		return $this->hasMany( Payment::class );
 	}
 }

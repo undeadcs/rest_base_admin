@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Customer;
 use App\Models\Apartment;
 use App\Enums\OrderStatus;
+use App\Models\Payment;
 
 class DatabaseOrderRepository implements OrderRepository {
 	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
@@ -68,5 +69,30 @@ class DatabaseOrderRepository implements OrderRepository {
 		}
 		
 		return !$update || $order->save( );
+	}
+	
+	public function PaymentAdd( Order $order, float $amount, string $comment ) : ?Payment {
+		$payment = new Payment;
+		$payment->amount = $amount;
+		$payment->comment = $comment;
+		
+		$payment->order( )->associate( $order );
+		
+		return $payment->save( ) ? $payment : null;
+	}
+	
+	public function PaymentUpdate( Payment $payment, float $amount, string $comment ) : bool {
+		$update = false;
+		
+		if ( $payment->amount != $amount ) {
+			$update = true;
+			$payment->amount = $amount;
+		}
+		if ( $payment->comment != $comment ) {
+			$update = true;
+			$payment->comment = $comment;
+		}
+		
+		return !$update || $payment->save( );
 	}
 }

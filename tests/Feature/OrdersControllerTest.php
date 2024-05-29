@@ -14,6 +14,7 @@ use App\Models\Apartment;
 use Mockery\Matcher\Closure;
 use App\Repositories\OrderRepository;
 use App\Repositories\ApartmentRepository;
+use App\Models\Payment;
 
 /**
  * Тестирование обработки действий с заказом
@@ -133,6 +134,18 @@ class OrdersControllerTest extends TestCase {
 		} );
 	}
 	
+	protected function PaymentArgument( Payment $payment ) : Closure {
+		return \Mockery::on( function( $value ) use( $payment ) {
+			// в фабрике id идет в конце из-за этого проваливается прямое сравнение объектов
+			$this->assertEquals( $value->id, $payment->id );
+			$this->assertEquals( $value->order_id, $payment->order_id );
+			$this->assertEquals( $value->amount, $payment->amount );
+			$this->assertEquals( $value->comment, $payment->comment );
+			
+			return true;
+		} );
+	}
+	
 	protected function ExpectsUpdatingOrder(
 		Order $order, Order $updateOrder, Customer $customer, Apartment $apartment, bool $result
 	) : void {
@@ -188,6 +201,97 @@ class OrdersControllerTest extends TestCase {
 		$this->ExpectsFindCustomer( $order->customer );
 		$this->ExpectsFindApartment( $order->apartment );
 		$this->ExpectsUpdatingOrder( $order, $updateOrder, $order->customer, $order->apartment, true );
+		
+		$url = '/orders/'.$order->id;
+		$this->from( $url )->put( $url, $data )->assertRedirect( '/orders' );
+	}
+	
+	public function test_updating_payment_add( ) : void {
+		$order = Order::factory( )->create( );
+		$updateOrder = Order::factory( )->make( );
+		$payment = Payment::factory( )->state( [ 'order_id' => null ] )->make( );
+		$data = [
+			'apartment_id'	=> $order->apartment->id,
+			'customer_id'	=> $order->customer->id,
+			'status'		=> $updateOrder->status->value,
+			'from'			=> $updateOrder->from->format( 'd.m.Y' ),
+			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
+			'persons_number' => $updateOrder->persons_number,
+			'comment'		=> $updateOrder->comment,
+			'payments'		=> [ [
+				'id'		=> 0,
+				'amount'	=> $payment->amount,
+				'comment'	=> $payment->comment
+			] ]
+		];
+		
+		$this->ExpectsFindCustomer( $order->customer );
+		$this->ExpectsFindApartment( $order->apartment );
+		
+		$this->instance( OrderRepository::class, \Mockery::mock(
+			OrderRepository::class,
+			function( MockInterface $mock ) use ( $order, $updateOrder, $payment ) {
+				$mock->shouldReceive( 'Update' )
+					->with(
+						$this->OrderArgument( $order ), $this->CustomerArgument( $order->customer ), $this->ApartmentArgument( $order->apartment ),
+						$updateOrder->status, $updateOrder->from->format( 'Y-m-d' ), $updateOrder->to->format( 'Y-m-d' ),
+						$updateOrder->persons_number, $updateOrder->comment
+					)
+					->once( )
+					->andReturn( true );
+				
+				$mock->shouldReceive( 'PaymentAdd' )
+					->with( $this->OrderArgument( $order ), $payment->amount, $payment->comment )
+					->once( )
+					->andReturn( $payment );
+			}
+		) );
+		
+		$url = '/orders/'.$order->id;
+		$this->from( $url )->put( $url, $data )->assertRedirect( '/orders' );
+	}
+	
+	public function test_updating_payment_update( ) : void {
+		$order = Order::factory( )->hasPayments( 1 )->create( );
+		$payment = $order->payments->first( );
+		$updateOrder = Order::factory( )->make( );
+		$updatePayment = Payment::factory( )->state( [ 'order_id' => null ] )->make( );
+		$data = [
+			'apartment_id'	=> $order->apartment->id,
+			'customer_id'	=> $order->customer->id,
+			'status'		=> $updateOrder->status->value,
+			'from'			=> $updateOrder->from->format( 'd.m.Y' ),
+			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
+			'persons_number' => $updateOrder->persons_number,
+			'comment'		=> $updateOrder->comment,
+			'payments'		=> [ [
+				'id'		=> $payment->id,
+				'amount'	=> $updatePayment->amount,
+				'comment'	=> $updatePayment->comment
+			] ]
+		];
+		
+		$this->ExpectsFindCustomer( $order->customer );
+		$this->ExpectsFindApartment( $order->apartment );
+		
+		$this->instance( OrderRepository::class, \Mockery::mock(
+			OrderRepository::class,
+			function( MockInterface $mock ) use ( $order, $updateOrder, $payment, $updatePayment ) {
+				$mock->shouldReceive( 'Update' )
+					->with(
+						$this->OrderArgument( $order ), $this->CustomerArgument( $order->customer ), $this->ApartmentArgument( $order->apartment ),
+						$updateOrder->status, $updateOrder->from->format( 'Y-m-d' ), $updateOrder->to->format( 'Y-m-d' ),
+						$updateOrder->persons_number, $updateOrder->comment
+					)
+					->once( )
+					->andReturn( true );
+				
+				$mock->shouldReceive( 'PaymentUpdate' )
+					->with( $this->PaymentArgument( $payment ), $updatePayment->amount, $updatePayment->comment )
+					->once( )
+					->andReturn( true );
+			}
+		) );
 		
 		$url = '/orders/'.$order->id;
 		$this->from( $url )->put( $url, $data )->assertRedirect( '/orders' );

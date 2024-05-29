@@ -28,6 +28,9 @@ class UpdateOrderRequest extends FormRequest {
 			'persons_number' => [ 'numeric' ],
 			'comment'		=> [ 'string', 'max:3000' ],
 			'status'		=> [ Rule::enum( OrderStatus::class ) ],
+			'payments.*.id'			=> [ 'required', 'integer' ],
+			'payments.*.amount'		=> [ 'required', 'numeric' ],
+			'payments.*.comment'	=> [ 'required', 'string' ]
 		];
 	}
 }

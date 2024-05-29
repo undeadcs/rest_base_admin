@@ -8,7 +8,7 @@
 @if ( $order->id )
 <div class="mb-3">
 	<label for="status" class="form-label">{{ __( 'Статус' ) }}</label>
-	<select id="status" class="form-select" name="status">
+	<select id="status" class="form-select" name="status" autofocus="autofocus">
 	@foreach( $statuses as $value => $title )
 	<option value="{{ $value }}"@if ( $order->status->value == $value ) selected="selected" @endif>{{ $title }}</option>
 	@endforeach
@@ -17,7 +17,7 @@
 @endif
 <div class="mb-3">
 	<label class="form-label" for="apartment_id">{{ __( 'Апартаменты' ) }}</label>
-	<select id="apartment_id" class="form-select" name="apartment_id" autofocus="autofocus">
+	<select id="apartment_id" class="form-select" name="apartment_id" @if ( !$order->id ) autofocus="autofocus"@endif>
 		@foreach( $apartments as $apartment )
 		<option value="{{ $apartment->id }}"@if ( $apartment->id == $order->apartment_id ) selected="selected" @endif>{{ $apartment->title }}</option>
 		@endforeach
@@ -60,6 +60,19 @@
 	<textarea id="comment" class="form-control" rows="4" name="comment">{{ $order->comment }}</textarea>
 	<div class="form-text">{{ __( 'Сюда стоит записывать всякие детали заказа. Желательно разные категории информации разделять, чтобы в дальнейшем их можно было проанализировать и добавить что-нибудь новое' ) }}</div>
 </div>
+@if ( $order->id )
+<h2>{{ __( 'Платежи' ) }}</h2>
+<div class="mb-1"><a id="add-payment-row" class="btn btn-success" href="#">{{ __( 'добавить' ) }}</a></div>
+<div id="payment-list" class="mb-5">
+@foreach( $order->payments as $index => $payment )
+<input type="hidden" name="payments[{{ $index }}][id]" value="{{ $payment->id }}"/>
+<div class="row mb-1">
+	<div class="col-2"><input class="form-control" type="text" name="payments[{{ $index }}][amount]" value="{{ $payment->amount }}"/></div>
+	<div class="col"><input class="form-control" type="text" name="payments[{{ $index }}][comment]" value="{{ $payment->comment }}"/></div>
+</div>
+@endforeach
+</div>
+@endif
 <input class="btn btn-primary" type="submit" value="{{ __( 'Сохранить' ) }}"/>
 <a class="btn btn-danger" href="{{ url( '/orders' ) }}">{{ __( 'Отмена' ) }}</a>
 </form>
@@ -85,4 +98,19 @@ $( '#find_customer' ).autocomplete( {
 	focus: function( event, ui ) { return false; },
 	change: function( event, ui ) { return false; }
 } );
+
+@if ( $order->id )
+var paymentsIndex = {{ $order->payments->count( ) }};
+
+$( '#add-payment-row' ).click( function( ) {
+	$( '#payment-list' ).append( $( '<input type="hidden" name="payments[' + paymentsIndex + '][id]" value="0"/>\
+<div class="row mb-1">\
+	<div class="col-2"><input class="form-control" type="text" name="payments[' + paymentsIndex + '][amount]" value=""/></div>\
+	<div class="col"><input class="form-control" type="text" name="payments[' + paymentsIndex + '][comment]" value=""/></div>\
+</div>' ) );
+	++paymentsIndex;
+	
+	return false;
+} );
+@endif
 </script>
