@@ -25,6 +25,10 @@ class OrdersController extends Controller {
 		return response( )->json( $order->toArray( ) );
 	}
 	
+	public function payments( Order $order ) : JsonResponse {
+		return response( )->json( $order->payments->toArray( ) );
+	}
+	
 	public function inventories( Order $order ) : JsonResponse {
 		$data = [ ];
 		

@@ -56,6 +56,11 @@ class OrdersTest extends TestCase {
 	}
 	
 	public function test_payments( ) : void {
+		$order = Order::factory( )->hasPayments( 10 )->create( );
+		
+		$this->getJson( '/api/orders/'.$order->id.'/payments' )
+			->assertStatus( 200 )
+			->assertJson( $order->payments->toArray( ) );
 	}
 	
 	public function test_inventories( ) : void {

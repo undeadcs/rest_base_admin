@@ -28,4 +28,5 @@ Route::controller( OrdersController::class )->prefix( 'orders' )->group( functio
 	Route::get( '/', 'index' );
 	Route::get( '/{order}', 'instance' );
 	Route::get( '/{order}/inventories', 'inventories' );
+	Route::get( '/{order}/payments', 'payments' );
 } );
