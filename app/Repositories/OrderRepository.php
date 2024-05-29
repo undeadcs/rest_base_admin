@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Apartment;
 use App\Enums\OrderStatus;
 use App\Models\Payment;
+use App\Models\Inventory;
 
 interface OrderRepository {
 	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator;
@@ -18,4 +19,6 @@ interface OrderRepository {
 	) : bool;
 	public function PaymentAdd( Order $order, float $amount, string $comment ) : ?Payment;
 	public function PaymentUpdate( Payment $payment, float $amount, string $comment ) : bool;
+	public function InventoryAdd( Order $order, Inventory $inventory, string $comment ) : bool;
+	public function InventoryUpdate( Order $order, Inventory $inventory, string $comment ) : bool;
 }

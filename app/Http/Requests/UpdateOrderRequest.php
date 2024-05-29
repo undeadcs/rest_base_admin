@@ -30,7 +30,10 @@ class UpdateOrderRequest extends FormRequest {
 			'status'		=> [ Rule::enum( OrderStatus::class ) ],
 			'payments.*.id'			=> [ 'required', 'integer' ],
 			'payments.*.amount'		=> [ 'required', 'numeric' ],
-			'payments.*.comment'	=> [ 'required', 'string' ]
+			'payments.*.comment'	=> [ 'required', 'string' ],
+			'inventories.*.id'		=> [ 'required', 'integer' ],
+			'inventories.*.comment'	=> [ 'required', 'string' ],
+			'inventories.*.inventory_id' => [ 'numeric' ]
 		];
 	}
 }

@@ -12,14 +12,16 @@ class Order extends Component {
 	public OrderModel $order;
 	public Collection $apartments;
 	public array $statuses;
+	public Collection $inventories;
 	
 	/**
 	 * Create a new component instance.
 	 */
-	public function __construct( OrderModel $order, Collection $apartments, array $statuses ) {
-		$this->order = $order;
-		$this->apartments = $apartments;
-		$this->statuses = $statuses;
+	public function __construct( OrderModel $order, Collection $apartments, array $statuses, Collection $inventories ) {
+		$this->order		= $order;
+		$this->apartments	= $apartments;
+		$this->statuses		= $statuses;
+		$this->inventories	= $inventories;
 	}
 
 	/**

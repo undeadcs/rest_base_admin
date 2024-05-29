@@ -61,6 +61,17 @@
 	<div class="form-text">{{ __( 'Сюда стоит записывать всякие детали заказа. Желательно разные категории информации разделять, чтобы в дальнейшем их можно было проанализировать и добавить что-нибудь новое' ) }}</div>
 </div>
 @if ( $order->id )
+<h2>{{ __( 'Инвентарь' ) }}</h2>
+<div class="mb-1"><a id="add-inventory-row" class="btn btn-success" href="#">{{ __( 'добавить' ) }}</a></div>
+<div id="inventory-list" class="mb-5">
+@foreach( $order->inventories as $index => $inventory )
+<input type="hidden" name="inventories[{{ $index }}][id]" value="{{ $inventory->pivot->id }}"/>
+<div class="row mb-1">
+	<div class="col-2">{{ $inventory->title }}</div>
+	<div class="col"><input class="form-control" type="text" name="inventories[{{ $index }}][comment]" value="{{ $inventory->pivot->comment }}"/></div>
+</div>
+@endforeach
+</div>
 <h2>{{ __( 'Платежи' ) }}</h2>
 <div class="mb-1"><a id="add-payment-row" class="btn btn-success" href="#">{{ __( 'добавить' ) }}</a></div>
 <div id="payment-list" class="mb-5">
@@ -109,6 +120,21 @@ $( '#add-payment-row' ).click( function( ) {
 	<div class="col"><input class="form-control" type="text" name="payments[' + paymentsIndex + '][comment]" value=""/></div>\
 </div>' ) );
 	++paymentsIndex;
+	
+	return false;
+} );
+
+var inventoriesIndex = {{ $order->inventories->count( ) }};
+
+$( '#add-inventory-row' ).click( function( ) {
+	$( '#inventory-list' ).append( $( '<input type="hidden" name="inventories[' + inventoriesIndex + '][id]" value="0"/>\
+<div class="row mb-1">\
+	<div class="col-2"><select class="form-select" name="inventories[' + inventoriesIndex + '][inventory_id]">\
+@foreach( $inventories as $inventory )<option value="{{ $inventory->id }}">{{ $inventory->title }}</option>\@endforeach
+	</select></div>\
+	<div class="col"><input class="form-control" type="text" name="inventories[' + inventoriesIndex + '][comment]" value=""/></div>\
+</div>' ) );
+	++inventoriesIndex;
 	
 	return false;
 } );

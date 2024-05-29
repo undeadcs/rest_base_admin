@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\Apartment;
 use App\Enums\OrderStatus;
 use App\Models\Payment;
+use App\Models\Inventory;
 
 class DatabaseOrderRepository implements OrderRepository {
 	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
@@ -94,5 +95,15 @@ class DatabaseOrderRepository implements OrderRepository {
 		}
 		
 		return !$update || $payment->save( );
+	}
+	
+	public function InventoryAdd( Order $order, Inventory $inventory, string $comment ) : bool {
+		$order->inventories( )->attach( $inventory, [ 'comment' => $comment ] );
+		
+		return true;
+	}
+	
+	public function InventoryUpdate( Order $order, Inventory $inventory, string $comment ) : bool {
+		return ( bool ) $order->inventories( )->updateExistingPivot( $inventory->pivot->id, [ 'comment' => $comment ] );
 	}
 }

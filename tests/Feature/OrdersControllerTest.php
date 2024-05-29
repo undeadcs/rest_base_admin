@@ -15,6 +15,7 @@ use Mockery\Matcher\Closure;
 use App\Repositories\OrderRepository;
 use App\Repositories\ApartmentRepository;
 use App\Models\Payment;
+use App\Models\Inventory;
 
 /**
  * Тестирование обработки действий с заказом
@@ -288,6 +289,112 @@ class OrdersControllerTest extends TestCase {
 				
 				$mock->shouldReceive( 'PaymentUpdate' )
 					->with( $this->PaymentArgument( $payment ), $updatePayment->amount, $updatePayment->comment )
+					->once( )
+					->andReturn( true );
+			}
+		) );
+		
+		$url = '/orders/'.$order->id;
+		$this->from( $url )->put( $url, $data )->assertRedirect( '/orders' );
+	}
+	
+	protected function InventoryArgument( Inventory $inventory ) : Closure {
+		return \Mockery::on( function( $value ) use( $inventory ) {
+			// в фабрике id идет в конце из-за этого проваливается прямое сравнение объектов
+			$this->assertEquals( $value->id, $inventory->id );
+			$this->assertEquals( $value->title, $inventory->title );
+			
+			return true;
+		} );
+	}
+	
+	public function test_updating_inventory_add( ) : void {
+		$order = Order::factory( )->create( );
+		$updateOrder = Order::factory( )->make( );
+		$inventory = Inventory::factory( )->create( );
+		$inventoryComment = $this->faker->text( );
+		$data = [
+			'apartment_id'	=> $order->apartment->id,
+			'customer_id'	=> $order->customer->id,
+			'status'		=> $updateOrder->status->value,
+			'from'			=> $updateOrder->from->format( 'd.m.Y' ),
+			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
+			'persons_number' => $updateOrder->persons_number,
+			'comment'		=> $updateOrder->comment,
+			'inventories'	=> [ [
+				'id'			=> 0,
+				'inventory_id'	=> $inventory->id,
+				'comment'		=> $inventoryComment
+			] ]
+		];
+		
+		$this->ExpectsFindCustomer( $order->customer );
+		$this->ExpectsFindApartment( $order->apartment );
+		
+		$this->instance( OrderRepository::class, \Mockery::mock(
+			OrderRepository::class,
+			function( MockInterface $mock ) use ( $order, $updateOrder, $inventory, $inventoryComment ) {
+				$mock->shouldReceive( 'Update' )
+					->with(
+						$this->OrderArgument( $order ), $this->CustomerArgument( $order->customer ), $this->ApartmentArgument( $order->apartment ),
+						$updateOrder->status, $updateOrder->from->format( 'Y-m-d' ), $updateOrder->to->format( 'Y-m-d' ),
+						$updateOrder->persons_number, $updateOrder->comment
+					)
+					->once( )
+					->andReturn( true );
+				
+				$mock->shouldReceive( 'InventoryAdd' )
+					->with( $this->OrderArgument( $order ), $this->InventoryArgument( $inventory ), $inventoryComment )
+					->once( )
+					->andReturn( true );
+			}
+		) );
+		
+		$url = '/orders/'.$order->id;
+		$this->from( $url )->put( $url, $data )->assertRedirect( '/orders' );
+	}
+	
+	public function test_updating_inventory_update( ) : void {
+		$order = Order::factory( )
+			->hasAttached(
+				Inventory::factory( )->count( 1 ),
+				fn( ) => [ 'comment' => fake( )->text( ) ]
+			)
+			->create( );
+		$updateOrder = Order::factory( )->make( );
+		$inventory = $order->inventories->first( );
+		$inventoryComment = $this->faker->text( );
+		$data = [
+			'apartment_id'	=> $order->apartment->id,
+			'customer_id'	=> $order->customer->id,
+			'status'		=> $updateOrder->status->value,
+			'from'			=> $updateOrder->from->format( 'd.m.Y' ),
+			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
+			'persons_number' => $updateOrder->persons_number,
+			'comment'		=> $updateOrder->comment,
+			'inventories' => [ [
+				'id'		=> $inventory->id,
+				'comment'	=> $inventoryComment
+			] ]
+		];
+		
+		$this->ExpectsFindCustomer( $order->customer );
+		$this->ExpectsFindApartment( $order->apartment );
+		
+		$this->instance( OrderRepository::class, \Mockery::mock(
+			OrderRepository::class,
+			function( MockInterface $mock ) use ( $order, $updateOrder, $inventory, $inventoryComment ) {
+				$mock->shouldReceive( 'Update' )
+					->with(
+						$this->OrderArgument( $order ), $this->CustomerArgument( $order->customer ), $this->ApartmentArgument( $order->apartment ),
+						$updateOrder->status, $updateOrder->from->format( 'Y-m-d' ), $updateOrder->to->format( 'Y-m-d' ),
+						$updateOrder->persons_number, $updateOrder->comment
+					)
+					->once( )
+					->andReturn( true );
+				
+				$mock->shouldReceive( 'InventoryUpdate' )
+					->with( $this->OrderArgument( $order ), $this->InventoryArgument( $inventory ), $inventoryComment )
 					->once( )
 					->andReturn( true );
 			}

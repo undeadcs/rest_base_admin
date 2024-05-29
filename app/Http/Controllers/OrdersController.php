@@ -11,6 +11,7 @@ use App\Models\Order;
 use App\Http\Requests\UpdateOrderRequest;
 use App\Enums\OrderStatus;
 use Illuminate\Support\Carbon;
+use App\Repositories\InventoryRepository;
 
 class OrdersController extends Controller {
 	protected OrderRepository $orders;
@@ -37,7 +38,7 @@ class OrdersController extends Controller {
 		return redirect( '/orders' )->with( 'success', __( 'Заявка добавлена' ) );
 	}
 	
-	public function update( Order $order, UpdateOrderRequest $request ) : RedirectResponse {
+	public function update( Order $order, UpdateOrderRequest $request, InventoryRepository $inventories ) : RedirectResponse {
 		$input = $request->validated( );
 		$customer = $this->customers->Find( $input[ 'customer_id' ] );
 		$apartment = $this->apartments->Find( $input[ 'apartment_id' ] );
@@ -49,6 +50,17 @@ class OrdersController extends Controller {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи о заявке' ) ] );
 		}
 		
+		if ( isset( $input[ 'inventories' ] ) && is_array( $input[ 'inventories' ] ) ) {
+			foreach( $input[ 'inventories' ] as $row ) {
+				if ( $row[ 'id' ] ) {
+					if ( $inventory = $order->inventories->find( $row[ 'id' ] ) ) {
+						$this->orders->InventoryUpdate( $order, $inventory, $row[ 'comment' ] );
+					}
+				} else {
+					$this->orders->InventoryAdd( $order, $inventories->Find( $row[ 'inventory_id' ] ), $row[ 'comment' ] );
+				}
+			}
+		}
 		if ( isset( $input[ 'payments' ] ) && is_array( $input[ 'payments' ] ) ) {
 			foreach( $input[ 'payments' ] as $row ) {
 				if ( $row[ 'id' ] ) {

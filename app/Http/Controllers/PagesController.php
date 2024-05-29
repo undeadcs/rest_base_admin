@@ -15,6 +15,7 @@ use App\Repositories\OrderRepository;
 use App\Repositories\ApartmentRepository;
 use App\Enums\OrderStatus;
 use App\Enums\ApartmentType;
+use App\Repositories\InventoryRepository;
 
 class PagesController extends Controller {
 	protected TopNavBar $topNavBar;
@@ -173,11 +174,15 @@ class PagesController extends Controller {
 		] );
 	}
 	
-	public function editOrder( Order $order, ApartmentRepository $apartments ) : View {
+	public function editOrder( Order $order, ApartmentRepository $apartments, InventoryRepository $inventories ) : View {
+		$order->payments;
+		$order->inventories;
+		
 		return view( 'components.pages.order-form', [
 			'top_nav_items'	=> $this->topNavBar->items( ),
 			'order'			=> $order,
 			'apartments'	=> $apartments->List( ),
+			'inventories'	=> $inventories->List( ),
 			'statuses'		=> [
 				OrderStatus::Pending->value => OrderStatus::Pending->title( ),
 				OrderStatus::Active->value => OrderStatus::Active->title( ),

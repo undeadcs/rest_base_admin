@@ -11,5 +11,5 @@
 	<x-top-nav :items="$top_nav_items"/>
 	<h1>@if ( $order->id ) {{ __( 'Изменение данных заявки' ) }} @else {{ __( 'Добавление заявки' ) }} @endif</h1>
 	<x-errors/>
-	<x-forms.order :order="$order" :apartments="$apartments" :statuses="$statuses"/>
+	<x-forms.order :order="$order" :apartments="$apartments" :statuses="$statuses" :inventories="$inventories"/>
 </div></x-layout>
