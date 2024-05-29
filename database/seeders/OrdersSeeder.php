@@ -25,6 +25,7 @@ class OrdersSeeder extends Seeder {
 				->has( Customer::factory( ) )
 				->for( $apartment )
 				->for( $apartment->currentPrice )
+				->hasPayments( mt_rand( 1, 5 ) )
 				->create( );
 		} );
 	}
