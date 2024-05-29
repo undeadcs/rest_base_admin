@@ -27,4 +27,5 @@ Route::controller( CustomersController::class )->prefix( 'customers' )->group( f
 Route::controller( OrdersController::class )->prefix( 'orders' )->group( function( ) {
 	Route::get( '/', 'index' );
 	Route::get( '/{order}', 'instance' );
+	Route::get( '/{order}/inventories', 'inventories' );
 } );

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Enums\OrderStatus;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Заявка на апартаменты
@@ -51,5 +52,9 @@ class Order extends Model {
 	
 	public function payments( ) : HasMany {
 		return $this->hasMany( Payment::class );
+	}
+	
+	public function inventories( ) : BelongsToMany {
+		return $this->belongsToMany( Inventory::class )->using( InventoryOrder::class )->withPivot( [ 'id', 'comment' ] );
 	}
 }

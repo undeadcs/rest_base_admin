@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Collection;
+use App\Models\Inventory;
 
 class OrdersTest extends TestCase {
 	use RefreshDatabase, WithFaker;
@@ -52,5 +53,32 @@ class OrdersTest extends TestCase {
 	
 	public function test_instance_not_found( ) : void {
 		$this->getJson( '/api/orders/1' )->assertStatus( 404 );
+	}
+	
+	public function test_payments( ) : void {
+	}
+	
+	public function test_inventories( ) : void {
+		$order = Order::factory( )
+			->hasAttached(
+				Inventory::factory( )->count( 3 ),
+				fn( ) => [ 'comment' => $this->faker->text( ) ]
+			)
+			->create( );
+		
+		$data = [ ];
+		
+		foreach( $order->inventories as $inventory ) {
+			$row = $inventory->toArray( );
+			$row[ 'pivot' ] = [
+				'id' => $inventory->pivot->id,
+				'comment' => $inventory->pivot->comment
+			];
+			$data[ ] = $row;
+		}
+		
+		$this->getJson( '/api/orders/'.$order->id.'/inventories' )
+			->assertStatus( 200 )
+			->assertJson( $data );
 	}
 }

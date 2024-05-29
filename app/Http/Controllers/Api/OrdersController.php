@@ -24,4 +24,19 @@ class OrdersController extends Controller {
 	public function instance( Order $order ) : JsonResponse {
 		return response( )->json( $order->toArray( ) );
 	}
+	
+	public function inventories( Order $order ) : JsonResponse {
+		$data = [ ];
+		
+		foreach( $order->inventories as $inventory ) {
+			$row = $inventory->toArray( );
+			$row[ 'pivot' ] = [
+				'id' => $inventory->pivot->id,
+				'comment' => $inventory->pivot->comment
+			];
+			$data[ ] = $row;
+		}
+		
+		return response( )->json( $data );
+	}
 }

@@ -11,6 +11,10 @@ class DatabaseInventoryRepository implements InventoryRepository {
 		return Inventory::orderBy( 'title', 'asc' )->get( );
 	}
 	
+	public function ListByOrder( int $orderId ) : Collection {
+		return Inventory::orders( )->where( 'order_id', $orderId )->get( );
+	}
+	
 	public function Find( int $id ) : Inventory {
 		return Inventory::findOrFail( $id );
 	}
