@@ -19,6 +19,10 @@ class InventoryPrice extends Model {
 	
 	public $timestamps = false;
 	
+	protected function casts( ) : array {
+		return [ 'created_at' => 'datetime' ];
+	}
+	
 	public function inventory( ) : BelongsTo {
 		return $this->belongsTo( Inventory::class );
 	}

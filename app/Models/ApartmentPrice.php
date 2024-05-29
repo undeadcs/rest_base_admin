@@ -19,6 +19,10 @@ class ApartmentPrice extends Model {
 	
 	public $timestamps = false;
 	
+	protected function casts( ) : array {
+		return [ 'created_at' => 'datetime' ];
+	}
+	
 	public function apartment( ) : BelongsTo {
 		return $this->belongsTo( Apartment::class );
 	}

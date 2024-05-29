@@ -26,14 +26,10 @@ class Apartment extends Model {
 	
 	public $timestamps = false;
 	
-	protected $attributes = [
-		'type' => ApartmentType::House
-	];
+	protected $attributes = [ 'type' => ApartmentType::House ];
 	
 	protected function casts( ) : array {
-		return [
-			'type' => ApartmentType::class
-		];
+		return [ 'type' => ApartmentType::class ];
 	}
 	
 	public function prices( ) : HasMany {
