@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Apartment;
 use App\Models\Order;
 use App\Models\Customer;
+use App\Models\Inventory;
 
 class OrdersSeeder extends Seeder {
 	use WithoutModelEvents;
@@ -21,11 +22,15 @@ class OrdersSeeder extends Seeder {
 		
 		$apartments->each( function( Apartment $apartment ) {
 			Order::factory( )
-				->count( mt_rand( 1, 3 ) )
+				->count( mt_rand( 2, 4 ) )
 				->has( Customer::factory( ) )
 				->for( $apartment )
 				->for( $apartment->currentPrice )
 				->hasPayments( mt_rand( 1, 5 ) )
+				->hasAttached(
+					Inventory::factory( )->count( 3 ),
+					fn( ) => [ 'comment' => fake( )->text( ) ]
+				)
 				->create( );
 		} );
 	}
