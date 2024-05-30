@@ -27,35 +27,6 @@ class PagesController extends Controller {
 		] );
 	}
 	
-	public function customers( Request $request, CustomerRepository $customers ) : View {
-		$columns = [
-			( object ) [ 'fieldName' => 'name',			'title' => __( 'Имя'			) ],
-			( object ) [ 'fieldName' => 'phone_number',	'title' => __( 'Телефон'		) ],
-			( object ) [ 'fieldName' => 'car_number',	'title' => __( 'Номер машины'	) ]
-		];
-		$paginator = $customers->List( ( int ) $request->input( 'page' ), 17 );
-		
-		return view( 'components.pages.'.TopPage::Customers->value, [
-			'top_nav_items' => $this->topNavBar->items( ),
-			'customers' => $paginator->getCollection( ),
-			'columns' => $columns,
-			'baseUrl' => url( '/customers' ),
-			'linkFieldName' => 'name',
-			'editFieldName' => 'id',
-			'newEntityUrl' => url( '/customers/add' ),
-			'currentPage' => $paginator->currentPage( ),
-			'lastPage' => $paginator->isEmpty( ) ? null : $paginator->lastPage( )
-		] );
-	}
-	
-	public function newCustomer( ) : View {
-		return view( 'components.pages.customer-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'customer' => new Customer ] );
-	}
-	
-	public function editCustomer( Customer $customer ) : View {
-		return view( 'components.pages.customer-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'customer' => $customer ] );
-	}
-	
 	public function orders( Request $request, OrderRepository $orders ) : View {
 		$columns = [
 			( object ) [ 'fieldName' => 'id',					'title' => __( 'Номер'			) ],
