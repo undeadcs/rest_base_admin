@@ -7,12 +7,10 @@ use App\Http\Controllers\InventoriesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\OrdersController;
 use App\Http\Controllers\Ui\InventoriesController as UiInventoriesController;
+use App\Http\Controllers\Ui\ApartmentsController as UiApartmentsController;
 
 Route::controller( PagesController::class )->group( function( ) {
 	Route::get( '/', 'main' )->name( 'page_main' );
-	Route::get( '/apartments', 'apartments' )->name( 'page_apartments' );
-	Route::get( '/apartments/add', 'newApartment' );
-	Route::get( '/apartments/{apartment}', 'editApartment' );
 	Route::get( '/orders', 'orders' )->name( 'page_orders' );
 	Route::get( '/orders/add', 'newOrder' );
 	Route::get( '/orders/{order}', 'editOrder' );
@@ -21,15 +19,21 @@ Route::controller( PagesController::class )->group( function( ) {
 	Route::get( '/customers/{customer}', 'editCustomer' );
 } );
 
-Route::controller( UiInventoriesController::class )->prefix( 'inventories' )->group( function( ) {
-	Route::get( '/', 'index' )->name( 'page_inventories' );
+Route::controller( UiApartmentsController::class )->prefix( 'apartments' )->group( function( ) {
+	Route::get( '/', 'index' )->name( 'page_apartments' );
 	Route::get( '/add', 'add' );
-	Route::get( '/{inventory}', 'edit' );
+	Route::get( '/{apartment}', 'edit' );
 } );
 
 Route::controller( ApartmentsController::class )->group( function( ) {
 	Route::post( '/apartments', 'add' );
 	Route::put( '/apartments/{apartment}', 'update' );
+} );
+
+Route::controller( UiInventoriesController::class )->prefix( 'inventories' )->group( function( ) {
+	Route::get( '/', 'index' )->name( 'page_inventories' );
+	Route::get( '/add', 'add' );
+	Route::get( '/{inventory}', 'edit' );
 } );
 
 Route::controller( InventoriesController::class )->group( function( ) {
