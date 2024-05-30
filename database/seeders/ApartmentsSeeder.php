@@ -24,5 +24,15 @@ class ApartmentsSeeder extends Seeder {
 				'type' => ApartmentType::House
 			] ) )
 			->create( );
+		
+		Apartment::factory( )
+			->hasPrices( 3 )
+			->count( 20 )
+			->state( new Sequence( fn( Sequence $sequence ) => [
+				'title' => 'Палатки #'.$sequence->index + 1,
+				'number' => $sequence->index + 1,
+				'type' => ApartmentType::TentPlace
+			] ) )
+			->create( );
 	}
 }
