@@ -28,7 +28,7 @@ class OrdersSeeder extends Seeder {
 				->for( $apartment->currentPrice )
 				->hasPayments( mt_rand( 1, 5 ) )
 				->hasAttached(
-					Inventory::factory( )->count( 3 ),
+					Inventory::factory( )->hasPrices( 3 )->count( 3 ),
 					fn( ) => [ 'comment' => fake( )->text( ) ]
 				)
 				->create( );

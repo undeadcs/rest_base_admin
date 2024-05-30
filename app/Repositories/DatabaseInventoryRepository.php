@@ -8,7 +8,7 @@ use App\Models\InventoryPrice;
 
 class DatabaseInventoryRepository implements InventoryRepository {
 	public function List( ) : Collection {
-		return Inventory::orderBy( 'title', 'asc' )->get( );
+		return Inventory::orderBy( 'title', 'asc' )->with( 'currentPrice' )->get( );
 	}
 	
 	public function ListByOrder( int $orderId ) : Collection {

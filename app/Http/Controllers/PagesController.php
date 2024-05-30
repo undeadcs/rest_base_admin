@@ -25,7 +25,9 @@ class PagesController extends Controller {
 	}
 	
 	public function main( ) : View {
-		return view( 'components.pages.'.TopPage::Main->value, [ 'top_nav_items' => $this->topNavBar->items( ) ] );
+		return view( 'components.pages.'.TopPage::Main->value, [
+			'top_nav_items' => $this->topNavBar->items( )
+		] );
 	}
 	
 	public function apartments( ApartmentRepository $apartments ) : View {
@@ -101,35 +103,6 @@ class PagesController extends Controller {
 	
 	public function editCustomer( Customer $customer ) : View {
 		return view( 'components.pages.customer-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'customer' => $customer ] );
-	}
-	
-	public function inventories( ) : View {
-		$inventories = Inventory::orderBy( 'title', 'asc' )->with( 'currentPrice' )->get( );
-		$inventories->each( function( Inventory $inventory ) {
-			$inventory->price = $inventory->currentPrice ? $inventory->currentPrice->price : 0.0;
-		} );
-		$columns = [
-			( object ) [ 'fieldName' => 'title',	'title' => __( 'Наименование'	) ],
-			( object ) [ 'fieldName' => 'price',	'title' => __( 'Цена'			) ]
-		];
-		
-		return view( 'components.pages.'.TopPage::Inventories->value, [
-			'top_nav_items' => $this->topNavBar->items( ),
-			'inventories' => $inventories,
-			'columns' => $columns,
-			'baseUrl' => url( '/inventories' ),
-			'linkFieldName' => 'title',
-			'editFieldName' => 'id',
-			'newEntityUrl' => url( '/inventories/add' )
-		] );
-	}
-	
-	public function newInventory( ) : View {
-		return view( 'components.pages.inventory-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'inventory' => new Inventory ] );
-	}
-	
-	public function editInventory( Inventory $inventory ) : View {
-		return view( 'components.pages.inventory-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'inventory' => $inventory ] );
 	}
 	
 	public function orders( Request $request, OrderRepository $orders ) : View {

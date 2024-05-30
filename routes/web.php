@@ -6,6 +6,7 @@ use App\Http\Controllers\ApartmentsController;
 use App\Http\Controllers\InventoriesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\Ui\InventoriesController as UiInventoriesController;
 
 Route::controller( PagesController::class )->group( function( ) {
 	Route::get( '/', 'main' )->name( 'page_main' );
@@ -18,9 +19,12 @@ Route::controller( PagesController::class )->group( function( ) {
 	Route::get( '/customers', 'customers' )->name( 'page_customers' );
 	Route::get( '/customers/add', 'newCustomer' );
 	Route::get( '/customers/{customer}', 'editCustomer' );
-	Route::get( '/inventories', 'inventories' )->name( 'page_inventories' );
-	Route::get( '/inventories/add', 'newInventory' );
-	Route::get( '/inventories/{inventory}', 'editInventory' );
+} );
+
+Route::controller( UiInventoriesController::class )->prefix( 'inventories' )->group( function( ) {
+	Route::get( '/', 'index' )->name( 'page_inventories' );
+	Route::get( '/add', 'add' );
+	Route::get( '/{inventory}', 'edit' );
 } );
 
 Route::controller( ApartmentsController::class )->group( function( ) {
