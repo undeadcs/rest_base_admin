@@ -17,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $comment
  */
 class Payment extends Model {
-	use HasFactory;
+	use HasFactory, DateSerialize;
 	
 	public function order( ) : BelongsTo {
 		return $this->belongsTo( Order::class );

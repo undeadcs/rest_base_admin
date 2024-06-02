@@ -9,10 +9,50 @@ use App\Models\Apartment;
 use App\Enums\OrderStatus;
 use App\Models\Payment;
 use App\Models\Inventory;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 
 class DatabaseOrderRepository implements OrderRepository {
 	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
 		return Order::orderBy( 'updated_at', 'desc' )->orderBy( 'created_at', 'desc' )->orderBy( 'id', 'desc' )->paginate( $pageSize, [ '*' ], 'page', $page );
+	}
+	
+	public function ListByPeriod( Carbon $from, Carbon $to, int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
+		$fromStr = $from->format( 'Y-m-d H:i:s' );
+		$toStr = $to->format( 'Y-m-d H:i:s' );
+		
+		$query = Order::orderBy( 'id', 'asc' );
+		
+		/*$query->whereBetween( 'from', [ $fromStr, $toStr ] ) // работает
+			->orWhereBetween( 'to', [ $fromStr, $toStr ] )
+			->orWhereRaw( '? BETWEEN "from" and "to"', $fromStr )
+			->orWhereRaw( '? BETWEEN "from" and "to"', $toStr );*/
+		//*
+		$query->where( function( Builder $query ) use( $fromStr, $toStr ) { // ?
+			$query->where( 'from', '<=', $fromStr )
+				->where( 'to', '>=', $fromStr );
+		} )->orWhere( function( Builder $query ) use( $fromStr, $toStr ) {
+			$query->where( 'from', '>=', $fromStr )
+				->where( 'from', '<=', $toStr );
+		} );
+		/*/
+		$query->where( function( Builder $query ) use( $fromStr, $toStr ) { // beginInPeriod
+			$query->where( 'from', '>=', $fromStr )
+				->where( 'from', '<=', $toStr );
+		} )->orWhere( function( Builder $query ) use( $fromStr, $toStr ) { // endInPeriod
+			$query->where( 'to', '>=', $fromStr )
+				->where( 'to', '<=', $toStr );
+		} )->orWhere( function( Builder $query ) use( $fromStr, $toStr ) { // insidePeriod
+			$query->where( 'from', '>=', $fromStr )
+				->where( 'to', '<=', $toStr );
+		} )->orWhere( function( Builder $query ) use( $fromStr, $toStr ) { // coverPeriod
+			$query->where( 'from', '<=', $fromStr )
+				->where( 'to', '>=', $toStr );
+		} );
+		//*/
+		
+		return $query->paginate( $pageSize, [ '*' ], 'page', $page );
 	}
 	
 	public function Find( int $id ) : Order {

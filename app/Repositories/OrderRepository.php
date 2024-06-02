@@ -9,9 +9,11 @@ use App\Models\Apartment;
 use App\Enums\OrderStatus;
 use App\Models\Payment;
 use App\Models\Inventory;
+use Carbon\Carbon;
 
 interface OrderRepository {
 	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator;
+	public function ListByPeriod( Carbon $from, Carbon $to, int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator;
 	public function Find( int $id ) : Order;
 	public function Add( Customer $customer, Apartment $apartment, string $from, string $to, int $personsNumber, string $comment ) : ?Order;
 	public function Update(

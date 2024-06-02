@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Repositories\OrderRepository;
 use Illuminate\Http\JsonResponse;
 use App\Models\Order;
+use Illuminate\Support\Facades\Date;
 
 class OrdersController extends Controller {
 	protected OrderRepository $orders;
@@ -42,5 +43,19 @@ class OrdersController extends Controller {
 		}
 		
 		return response( )->json( $data );
+	}
+	
+	public function findByPeriod( Request $request ) : JsonResponse {
+		$input = $request->validate( [
+			'from' => [ 'required', 'date' ],
+			'to' => [ 'required', 'date' ]
+		] );
+		
+		$from = Date::createFromFormat( 'Ymd', $input[ 'from' ] )->setTime( 0, 0, 0 );
+		$to = Date::createFromFormat( 'Ymd', $input[ 'to' ] )->setTime( 23, 59, 59 );
+		
+		$paginator = $this->orders->ListByPeriod( $from, $to, ( int ) $request->input( 'page' ) );
+		
+		return response( )->json( [ 'totalCount' => $paginator->total( ), 'data' => $paginator->items( ) ] );
 	}
 }

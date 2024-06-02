@@ -8,6 +8,9 @@ use Tests\TestCase;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Inventory;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Database\Eloquent\Factories\Sequence;
+use Illuminate\Support\Facades\Storage;
 
 class OrdersTest extends TestCase {
 	use RefreshDatabase, WithFaker;
@@ -85,5 +88,86 @@ class OrdersTest extends TestCase {
 		$this->getJson( '/api/orders/'.$order->id.'/inventories' )
 			->assertStatus( 200 )
 			->assertJson( $data );
+	}
+	
+	public function test_find_by_period( ) : void {
+		$periodFrom = new \DateTime( '2024-06-02 00:00:00' );
+		$periodTo = new \DateTime( '2024-06-08 00:00:00' );
+		
+		$pastPeriodTo = ( clone $periodFrom )->modify( '-1 day' );
+		$pastPeriodFrom = ( clone $pastPeriodTo )->modify( '-1 week' );
+		
+		$futurePeriodFrom = ( clone $periodTo )->modify( '+1 day' );
+		$futurePeriodTo = ( clone $futurePeriodFrom )->modify( '+1 week' );
+		
+		// старые заявки, до периода
+		$pastOrders = Order::factory( )
+			->count( 10 )
+			->sequence( fn( Sequence $sequence ) => [
+				'from' => $this->faker->dateTimeBetween( $pastPeriodFrom->format( 'Y-m-d H:i:s' ), $pastPeriodTo->format( 'Y-m-d H:i:s' ) ),
+				'to' => $pastPeriodTo
+			] )
+			->create( );
+		
+		// будущие заявки после периода
+		$futureOrders =  Order::factory( )
+			->count( 10 )
+			->sequence( fn( ) => [
+				'from' => $futurePeriodFrom,
+				'to' => $this->faker->dateTimeBetween( $futurePeriodFrom->format( 'Y-m-d H:i:s' ), $futurePeriodTo->format( 'Y-m-d H:i:s' ) )
+			] )
+			->create( );
+		
+		// заявки, которые оканчиваются внутри периода
+		$endInPeriodOrders = Order::factory( )
+			->count( 10 )
+			->sequence( fn( Sequence $sequence ) => [
+				'from' => $this->faker->dateTimeBetween( $pastPeriodFrom->format( 'Y-m-d H:i:s' ), $pastPeriodTo->format( 'Y-m-d H:i:s' ) ),
+				'to' => $this->faker->dateTimeBetween( $periodFrom->format( 'Y-m-d H:i:s' ), $periodTo->format( 'Y-m-d H:i:s' ) )
+			] )
+			->create( );
+		
+		// заявки, которые начинаются внутри периода
+		$beginInPeriodOrders = Order::factory( )
+			->count( 10 )
+			->sequence( fn( Sequence $sequence ) => [
+				'from' => $this->faker->dateTimeBetween( $periodFrom->format( 'Y-m-d H:i:s' ), $periodTo->format( 'Y-m-d H:i:s' ) ),
+				'to' => $this->faker->dateTimeBetween( $futurePeriodFrom->format( 'Y-m-d H:i:s' ), $futurePeriodTo->format( 'Y-m-d H:i:s' ) )
+			] )
+			->create( );
+		
+		// заявки, которые входят в период
+		$insidePeriodOrders = Order::factory( )
+			->count( 10 )
+			->sequence( function( Sequence $sequence ) use( $periodFrom, $periodTo ) {
+				$t1 = $this->faker->dateTimeBetween( $periodFrom->format( 'Y-m-d H:i:s' ), $periodTo->format( 'Y-m-d H:i:s' ) );
+				$t2 = $this->faker->dateTimeBetween( $periodFrom->format( 'Y-m-d H:i:s' ), $periodTo->format( 'Y-m-d H:i:s' ) );
+				
+				return ( $t1 < $t2 ) ? [ 'from' => $t1, 'to' => $t2 ] : [ 'from' => $t2, 'to' => $t1 ];
+			} )
+			->create( );
+		
+		// заявки, которые охватывают период
+		$coverPeriodOrders = Order::factory( )
+			->count( 10 )
+			->sequence( function( Sequence $sequence ) use( $pastPeriodFrom, $pastPeriodTo, $futurePeriodFrom, $futurePeriodTo ) {
+				$t1 = $this->faker->dateTimeBetween( $pastPeriodFrom->format( 'Y-m-d H:i:s' ), $pastPeriodTo->format( 'Y-m-d H:i:s' ) );
+				$t2 = $this->faker->dateTimeBetween( $futurePeriodFrom->format( 'Y-m-d H:i:s' ), $futurePeriodTo->format( 'Y-m-d H:i:s' ) );
+				
+				return ( $t1 < $t2 ) ? [ 'from' => $t1, 'to' => $t2 ] : [ 'from' => $t2, 'to' => $t1 ];
+			} )
+			->create( );
+		
+		$expectedOrders = $endInPeriodOrders->concat( $beginInPeriodOrders )
+			->concat( $insidePeriodOrders )
+			->concat( $coverPeriodOrders )
+			->sortBy( 'id' );
+		
+		$totalCount = $expectedOrders->count( );
+		$expectedOrders = $expectedOrders->slice( 0, 25 );
+		
+		$this->getJson( '/api/orders/find-by-period?from='.$periodFrom->format( 'Ymd' ).'&to='.$periodTo->format( 'Ymd' ) )
+			->assertStatus( 200 )
+			->assertJson( [ 'totalCount' => $totalCount, 'data' => $expectedOrders->values( )->toArray( ) ] );
 	}
 }

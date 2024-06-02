@@ -18,8 +18,6 @@ use App\Enums\ApartmentType;
  * @property int $capacity
  * @property int $type
  * @property string $comment
- * 
- * @todo добавить тип {домик|палаточное место|гостиничный номер}
  */
 class Apartment extends Model {
 	use HasFactory;
@@ -38,5 +36,9 @@ class Apartment extends Model {
 	
 	public function currentPrice( ) : HasOne {
 		return $this->prices( )->one( );
+	}
+	
+	public function orders( ) : HasMany {
+		return $this->hasMany( Order::class );
 	}
 }

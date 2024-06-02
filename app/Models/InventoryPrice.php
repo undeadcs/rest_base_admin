@@ -20,7 +20,7 @@ class InventoryPrice extends Model {
 	public $timestamps = false;
 	
 	protected function casts( ) : array {
-		return [ 'created_at' => 'datetime' ];
+		return [ 'created_at' => 'datetime:Y-m-d H:i:s' ];
 	}
 	
 	public function inventory( ) : BelongsTo {
