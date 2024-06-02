@@ -10,6 +10,8 @@ Route::controller( ApartmentsController::class )->prefix( 'apartments' )->group(
 	Route::get( '/', 'index' );
 	Route::get( '/{apartment}', 'instance' );
 	Route::get( '/{apartment}/prices', 'prices' );
+	Route::get( '/{apartment}/orders', 'orders' );
+	Route::get( '/{apartment}/orders-by-period', 'ordersByPeriod' );
 } );
 
 Route::controller( InventoriesController::class )->prefix( 'inventories' )->group( function( ) {
@@ -26,6 +28,7 @@ Route::controller( CustomersController::class )->prefix( 'customers' )->group( f
 
 Route::controller( OrdersController::class )->prefix( 'orders' )->group( function( ) {
 	Route::get( '/', 'index' );
+	Route::get( '/find-by-period', 'findByPeriod' );
 	Route::get( '/{order}', 'instance' );
 	Route::get( '/{order}/inventories', 'inventories' );
 	Route::get( '/{order}/payments', 'payments' );

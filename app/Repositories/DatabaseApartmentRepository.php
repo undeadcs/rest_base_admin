@@ -5,8 +5,13 @@ use Illuminate\Database\Eloquent\Collection;
 use App\Models\Apartment;
 use App\Models\ApartmentPrice;
 use App\Enums\ApartmentType;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 
 class DatabaseApartmentRepository implements ApartmentRepository {
+	use OrderPeriodUtils;
+	
 	public function List( ) : Collection {
 		return Apartment::orderBy( 'number', 'desc' )->with( 'currentPrice' )->get( );
 	}
@@ -59,5 +64,24 @@ class DatabaseApartmentRepository implements ApartmentRepository {
 		$instance->price = $price;
 		
 		return $apartment->prices( )->save( $instance ) ? $instance : null;
+	}
+	
+	public function ListOrders( Apartment $apartment, int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
+		return $apartment->orders( )
+			->orderBy( 'orders.id', 'asc' )
+			->paginate( $pageSize, [ '*' ], 'page', $page );
+	}
+	
+	public function ListOrdersByPeriod( Apartment $apartment, Carbon $from, Carbon $to, int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
+		return $apartment->orders( )
+			->orderBy( 'orders.id', 'asc' )
+			->where( function( Builder $query ) use( $from, $to ) {
+				$this->ApplyQueryPeriodCondition(
+					$query,
+					$from->format( 'Y-m-d H:i:s' ),
+					$to->format( 'Y-m-d H:i:s'  )
+				);
+			} )
+			->paginate( $pageSize, [ '*' ], 'page', $page );
 	}
 }

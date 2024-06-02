@@ -47,12 +47,12 @@ class OrdersController extends Controller {
 	
 	public function findByPeriod( Request $request ) : JsonResponse {
 		$input = $request->validate( [
-			'from' => [ 'required', 'date' ],
-			'to' => [ 'required', 'date' ]
+			'from' => [ 'required', 'date_format:YmdHis' ],
+			'to' => [ 'required', 'date_format:YmdHis' ]
 		] );
 		
-		$from = Date::createFromFormat( 'Ymd', $input[ 'from' ] )->setTime( 0, 0, 0 );
-		$to = Date::createFromFormat( 'Ymd', $input[ 'to' ] )->setTime( 23, 59, 59 );
+		$from = Date::createFromFormat( 'YmdHis', $input[ 'from' ] );
+		$to = Date::createFromFormat( 'YmdHis', $input[ 'to' ] );
 		
 		$paginator = $this->orders->ListByPeriod( $from, $to, ( int ) $request->input( 'page' ) );
 		
