@@ -13,7 +13,7 @@ class DatabaseApartmentRepository implements ApartmentRepository {
 	use OrderPeriodUtils;
 	
 	public function List( ) : Collection {
-		return Apartment::orderBy( 'number', 'desc' )->with( 'currentPrice' )->get( );
+		return Apartment::orderBy( 'number', 'asc' )->with( 'currentPrice' )->get( );
 	}
 	
 	public function Find( int $id ) : Apartment {

@@ -17,7 +17,7 @@ class ApartmentsTest extends TestCase {
 		
 		$this->getJson( '/api/apartments' )
 			->assertStatus( 200 )
-			->assertJson( $apartments->sortByDesc( 'number' )->values( )->toArray( ) );
+			->assertJson( $apartments->sortBy( 'number' )->values( )->toArray( ) );
 	}
 	
 	public function test_instance( ) : void {
