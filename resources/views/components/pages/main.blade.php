@@ -1,4 +1,4 @@
 <x-layout><div class="container-fluid">
 	<x-top-nav :items="$top_nav_items"/>
-	<h1>{{ __( 'Календарь' ) }}</h1>
+	<x-tables.schedule :apartments="$apartments" :days="$days" :order-index="$orderIndex"/>
 </div></x-layout>

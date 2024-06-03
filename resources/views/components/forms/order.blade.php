@@ -9,7 +9,7 @@
 <div class="mb-3">
 	<label for="status" class="form-label">{{ __( 'Статус' ) }}</label>
 	<select id="status" class="form-select" name="status" autofocus="autofocus">
-	@foreach( $statuses as $value => $title )
+	@foreach( $attributes->get( 'statuses' ) as $value => $title )
 	<option value="{{ $value }}"@if ( $order->status->value == $value ) selected="selected" @endif>{{ $title }}</option>
 	@endforeach
 	</select>
@@ -42,13 +42,41 @@
 	<textarea id="customer_comment" class="form-control" rows="4" name="customer[comment]" readonly="readonly">{{ $order->customer_id ? $order->customer->comment : '' }}</textarea>
 </div></div>
 <div class="row mb-3">
-	<div class="col">
+	<div class="col-2">
 		<label class="form-label" for="from">{{ __( 'С' ) }}</label>
-		<input id="from" class="form-control" type="text" name="from" value="{{ $order->from ? $order->from->format( 'd.m.Y' ) : '' }}"/>
+		<input id="from" class="form-control" type="text" name="from" value="{{ $order->from->format( 'd.m.Y' ) }}"/>
 	</div>
-	<div class="col">
+	<div class="col-2">
+		<label class="form-label" for="from-hour">&nbsp;</label>
+		<div class="input-group">
+			<input id="from-hour" class="form-control" type="text" name="from_hour" value="{{ $order->from->format( 'H' ) }}"/>
+			<div class="input-group-text">{{ __( 'ч' ) }}</div>
+		</div>
+	</div>
+	<div class="col-2">
+		<label class="form-label" for="from-minute">&nbsp;</label>
+		<div class="input-group">
+			<input id="from-minute" class="form-control" type="text" name="from_minute" value="{{ $order->from->format( 'i' ) }}"/>
+			<div class="input-group-text">{{ __( 'м' ) }}</div>
+		</div>
+	</div>
+	<div class="col-2">
 		<label class="form-label" for="to">{{ __( 'По' ) }}</label>
-		<input id="to" class="form-control" type="text" name="to" value="{{ $order->to ? $order->to->format( 'd.m.Y' ) : '' }}"/>
+		<input id="to" class="form-control" type="text" name="to" value="{{ $order->to->format( 'd.m.Y' ) }}"/>
+	</div>
+	<div class="col-2">
+		<label class="form-label" for="to-hour">&nbsp;</label>
+		<div class="input-group">
+			<input id="to-hour" class="form-control" type="text" name="to_hour" value="{{ $order->to->format( 'H' ) }}"/>
+			<div class="input-group-text">{{ __( 'ч' ) }}</div>
+		</div>
+	</div>
+	<div class="col-2">
+		<label class="form-label" for="to-minute">&nbsp;</label>
+		<div class="input-group">
+			<input id="to-minute" class="form-control" type="text" name="to_minute" value="{{ $order->to->format( 'i' ) }}"/>
+			<div class="input-group-text">{{ __( 'м' ) }}</div>
+		</div>
 	</div>
 </div>
 <div class="mb-3">
@@ -130,7 +158,7 @@ $( '#add-inventory-row' ).click( function( ) {
 	$( '#inventory-list' ).append( $( '<input type="hidden" name="inventories[' + inventoriesIndex + '][id]" value="0"/>\
 <div class="row mb-1">\
 	<div class="col-2"><select class="form-select" name="inventories[' + inventoriesIndex + '][inventory_id]">\
-@foreach( $inventories as $inventory )<option value="{{ $inventory->id }}">{{ $inventory->title }}</option>\@endforeach
+@foreach( $attributes->get( 'inventories' ) as $inventory )<option value="{{ $inventory->id }}">{{ $inventory->title }}</option>\@endforeach
 	</select></div>\
 	<div class="col"><input class="form-control" type="text" name="inventories[' + inventoriesIndex + '][comment]" value=""/></div>\
 </div>' ) );

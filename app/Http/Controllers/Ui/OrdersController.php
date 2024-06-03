@@ -55,9 +55,13 @@ class OrdersController extends Controller {
 	}
 	
 	public function add( ApartmentRepository $apartments ) : View {
+		$order = new Order;
+		$order->from = now( );
+		$order->to = now( )->modify( '+1 week' );
+		
 		return view( 'components.pages.order-form', [
 			'top_nav_items'	=> $this->topNavBar->items( ),
-			'order'			=> new Order,
+			'order'			=> $order,
 			'apartments'	=> $apartments->List( )
 		] );
 	}

@@ -11,17 +11,13 @@ use Illuminate\Database\Eloquent\Collection;
 class Order extends Component {
 	public OrderModel $order;
 	public Collection $apartments;
-	public array $statuses;
-	public Collection $inventories;
 	
 	/**
 	 * Create a new component instance.
 	 */
-	public function __construct( OrderModel $order, Collection $apartments, array $statuses, Collection $inventories ) {
+	public function __construct( OrderModel $order, Collection $apartments ) {
 		$this->order		= $order;
 		$this->apartments	= $apartments;
-		$this->statuses		= $statuses;
-		$this->inventories	= $inventories;
 	}
 
 	/**
