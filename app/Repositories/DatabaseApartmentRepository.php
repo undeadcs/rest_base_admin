@@ -84,4 +84,12 @@ class DatabaseApartmentRepository implements ApartmentRepository {
 			} )
 			->paginate( $pageSize, [ '*' ], 'page', $page );
 	}
+	
+	public function ListOrdersWithCustomer( Apartment $apartment, int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
+		return $apartment->orders( )
+			->orderBy( 'orders.id', 'asc' )
+			->with( 'customer' )
+			->with( 'apartmentPrice' )
+			->paginate( $pageSize, [ '*' ], 'page', $page );
+	}
 }
