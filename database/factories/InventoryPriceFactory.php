@@ -18,7 +18,7 @@ class InventoryPriceFactory extends Factory {
 		return [
 			'inventory_id' => Inventory::factory( ),
 			'created_at' => $this->faker->dateTime( )->format( 'Y-m-d H:i:s' ),
-			'price' => $this->faker->randomFloat( null, 1.0, 5000.0 )
+			'price' => $this->faker->randomFloat( 2, 1.0, 5000.0 )
 		];
 	}
 }
