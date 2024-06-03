@@ -142,4 +142,22 @@ class CustomersTest extends TestCase {
 			->assertStatus( 200 )
 			->assertJson( $data );
 	}
+	
+	public function test_orders_first_page( ) : void {
+		$totalCount = 30;
+		$customer = Customer::factory( )->hasOrders( $totalCount )->create( );
+		
+		$this->getJson( '/api/customers/'.$customer->id.'/orders' )
+			->assertStatus( 200 )
+			->assertExactJson( [ 'totalCount' => $totalCount, 'data' => $customer->orders->sortByDesc( 'id' )->slice( 0, 25 )->values( )->toArray( ) ] );
+	}
+	
+	public function test_orders_second_page( ) : void {
+		$totalCount = 30;
+		$customer = Customer::factory( )->hasOrders( $totalCount )->create( );
+		
+		$this->getJson( '/api/customers/'.$customer->id.'/orders?page=2' )
+			->assertStatus( 200 )
+			->assertExactJson( [ 'totalCount' => $totalCount, 'data' => $customer->orders->sortByDesc( 'id' )->slice( 25, 25 )->values( )->toArray( ) ] );
+	}
 }

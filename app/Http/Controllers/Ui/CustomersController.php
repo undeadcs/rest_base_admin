@@ -42,7 +42,10 @@ class CustomersController extends Controller {
 		return view( 'components.pages.customer-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'customer' => new Customer ] );
 	}
 	
-	public function edit( Customer $customer ) : View {
-		return view( 'components.pages.customer-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'customer' => $customer ] );
+	public function edit( Customer $customer, CustomerRepository $customers ) : View {
+		return view( 'components.pages.customer-form', [
+			'top_nav_items' => $this->topNavBar->items( ),
+			'customer' => $customer
+		] );
 	}
 }

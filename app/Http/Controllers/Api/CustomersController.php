@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Repositories\CustomerRepository;
 use Illuminate\Http\JsonResponse;
 use App\Models\Customer;
-use Illuminate\Database\Eloquent\Collection;
 
 class CustomersController extends Controller {
 	protected CustomerRepository $customers;
@@ -24,6 +23,12 @@ class CustomersController extends Controller {
 	
 	public function instance( Customer $customer ) : JsonResponse {
 		return response( )->json( $customer->toArray( ) );
+	}
+	
+	public function orders( Customer $customer, Request $request ) : JsonResponse {
+		$paginator = $this->customers->ListOrders( $customer, ( int ) $request->input( 'page' ) );
+		
+		return response( )->json( [ 'totalCount' => $paginator->total( ), 'data' => $paginator->items( ) ] );
 	}
 	
 	public function findForOrder( Request $request ) : JsonResponse {

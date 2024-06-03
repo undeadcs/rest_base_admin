@@ -24,6 +24,7 @@ Route::controller( CustomersController::class )->prefix( 'customers' )->group( f
 	Route::get( '/', 'index' );
 	Route::get( '/find-for-order', 'findForOrder' );
 	Route::get( '/{customer}', 'instance' );
+	Route::get( '/{customer}/orders', 'orders' );
 } );
 
 Route::controller( OrdersController::class )->prefix( 'orders' )->group( function( ) {

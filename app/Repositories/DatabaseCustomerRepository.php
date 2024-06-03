@@ -11,6 +11,10 @@ class DatabaseCustomerRepository implements CustomerRepository {
 		return Customer::orderBy( 'name', 'asc' )->paginate( $pageSize, [ '*' ], 'page', $page );
 	}
 	
+	public function ListOrders( Customer $customer, int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
+		return $customer->orders( )->paginate( $pageSize, [ '*' ], 'page', $page );
+	}
+	
 	public function Find( int $id ) : Customer {
 		return Customer::findOrFail( $id );
 	}
