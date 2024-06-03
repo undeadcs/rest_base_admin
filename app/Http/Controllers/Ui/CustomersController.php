@@ -42,10 +42,15 @@ class CustomersController extends Controller {
 		return view( 'components.pages.customer-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'customer' => new Customer ] );
 	}
 	
-	public function edit( Customer $customer, CustomerRepository $customers ) : View {
+	public function edit( Customer $customer, Request $request, CustomerRepository $customers ) : View {
+		$paginator = $customers->ListOrdersWithApartment( $customer, ( int ) $request->input( 'page' ) );
+		
 		return view( 'components.pages.customer-form', [
-			'top_nav_items' => $this->topNavBar->items( ),
-			'customer' => $customer
+			'top_nav_items'	=> $this->topNavBar->items( ),
+			'customer'		=> $customer,
+			'orders'		=> $paginator->getCollection( ),
+			'currentPage'	=> $paginator->currentPage( ),
+			'lastPage'		=> $paginator->isEmpty( ) ? null : $paginator->lastPage( )
 		] );
 	}
 }

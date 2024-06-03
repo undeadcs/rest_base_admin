@@ -24,3 +24,35 @@
 <input class="btn btn-primary" type="submit" value="{{ __( 'Сохранить' ) }}"/>
 <a class="btn btn-danger" href="{{ url( '/customers' ) }}">{{ __( 'Отмена' ) }}</a>
 </form>
+@if ( $attributes->has( 'orders' ) )
+<h2>{{ __( 'Заявки' ) }}</h2>
+
+<table class="table"><thead><tr>
+	<th>{{ __( '#' ) }}</th>
+	<th>{{ __( 'Статус' ) }}</th>
+	<th>{{ __( 'Апартаменты' ) }}</th>
+	<th>{{ __( 'Цена' ) }}</th>
+	<th>{{ __( 'С' ) }}</th>
+	<th>{{ __( 'По' ) }}</th>
+	<th>{{ __( 'Кол-во человек' ) }}</th>
+</tr></thead><tbody>
+@foreach( $attributes->get( 'orders' ) as $order )
+<tr>
+	<td><a href="{{ url( '/orders' ) }}/{{ $order->id }}">{{ $order->id }}</a></td>
+	<td>{{ $order->status->title( ) }}</td>
+	<td><a href="{{ url( '/apartments' ) }}/{{ $order->apartment->id }}">{{ $order->apartment->title }}</a></td>
+	<td>{{ $order->apartmentPrice->price }}</td>
+	<td>{{ $order->from->format( 'd.m.Y H:i' ) }}</td>
+	<td>{{ $order->to->format( 'd.m.Y H:i' ) }}</td>
+	<td>{{ $order->persons_number }}</td>
+</tr>
+@endforeach
+</tbody></table>
+@if ( $attributes->has( 'last-page' ) )
+<nav><ul class="pagination justify-content-center">
+@for( $pageNumber = 1; $pageNumber <= $attributes->get( 'last-page' ); ++$pageNumber )
+<li @class( [ 'page-item', 'active' => $pageNumber == $attributes->get( 'current-page' ) ] )><a class="page-link" href="{{ url( '/customers' ) }}/{{ $customer->id }}?page={{ $pageNumber }}">{{ $pageNumber }}</a></li>
+@endfor
+</ul></nav>
+@endif
+@endif

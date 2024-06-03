@@ -42,12 +42,12 @@
 </form>
 @if ( $apartment->id && ( $apartment->prices->count( ) > 1 ) )
 <h2>{{ __( 'История изменения цены' ) }}</h2>
-<table class="table"><thead>
+<table class="table"><thead><tr>
 	<th class="col">{{ __( 'Цена' ) }}</th>
 	<th class="col">{{ __( 'Дата начала периода действия' ) }}</th>
-</thead>
+</tr></thead><tbody>
 @foreach( $apartment->prices as $price )
 <tr><td>{{ $price->price }}</td><td>{{ $price->created_at }}</td></tr>
 @endforeach
-</table>
+</tbody></table>
 @endif
