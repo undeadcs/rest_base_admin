@@ -35,7 +35,7 @@ class OrdersController extends Controller {
 		return view( 'components.pages.order-form', [
 			'top_nav_items'	=> $this->topNavBar->items( ),
 			'order'			=> $order,
-			'apartments'	=> $apartments->List( )
+			'apartments'	=> $apartments->GetAll( )
 		] );
 	}
 	
@@ -46,8 +46,8 @@ class OrdersController extends Controller {
 		return view( 'components.pages.order-form', [
 			'top_nav_items'	=> $this->topNavBar->items( ),
 			'order'			=> $order,
-			'apartments'	=> $apartments->List( ),
-			'inventories'	=> $inventories->List( ),
+			'apartments'	=> $apartments->GetAll( ),
+			'inventories'	=> $inventories->GetAll( ),
 			'statuses'		=> [
 				OrderStatus::Pending->value => OrderStatus::Pending->title( ),
 				OrderStatus::Active->value => OrderStatus::Active->title( ),

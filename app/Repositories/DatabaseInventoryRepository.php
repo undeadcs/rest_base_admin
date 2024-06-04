@@ -12,6 +12,10 @@ class DatabaseInventoryRepository implements InventoryRepository {
 		return Inventory::orderBy( 'title', 'asc' )->with( 'currentPrice' )->paginate( $pageSize, [ '*' ], 'page', $page );
 	}
 	
+	public function GetAll( ) : Collection {
+		return Inventory::orderBy( 'title', 'asc' )->with( 'currentPrice' )->get( );
+	}
+	
 	public function ListByOrder( int $orderId ) : Collection {
 		return Inventory::orders( )->where( 'order_id', $orderId )->get( );
 	}

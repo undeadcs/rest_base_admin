@@ -9,6 +9,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface InventoryRepository {
 	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator;
+	public function GetAll( ) : Collection;
 	public function ListByOrder( int $orderId ) : Collection;
 	public function Find( int $id ) : Inventory;
 	public function Add( string $title ) : ?Inventory;

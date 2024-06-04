@@ -7,12 +7,24 @@ use App\Enums\ApartmentType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class DatabaseApartmentRepository implements ApartmentRepository {
 	use OrderPeriodUtils;
 	
 	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
 		return Apartment::orderBy( 'id', 'desc' )->with( 'currentPrice' )->paginate( $pageSize, [ '*' ], 'page', $page );
+	}
+	
+	public function GetAll( ) : Collection {
+		return Apartment::orderBy( 'id', 'desc' )->with( 'currentPrice' )->get( );
+	}
+	
+	public function GetHouses( ) : Collection {
+		return Apartment::orderBy( 'id', 'asc' )
+			->where( 'type', ApartmentType::House )
+			->with( 'currentPrice' )
+			->get( );
 	}
 	
 	public function Find( int $id ) : Apartment {

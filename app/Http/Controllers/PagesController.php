@@ -23,8 +23,7 @@ class PagesController extends Controller {
 		$from = Date::createFromFormat( 'd.m.Y', $request->get( 'f', today( )->format( 'd.m.Y' ) ) )->setTime( 0, 0 );
 		$to = Date::createFromFormat( 'd.m.Y', $request->get( 't', today( )->modify( '+6 days' )->format( 'd.m.Y' ) ) )->setTime( 23, 59, 59 );
 		
-		$list = $apartments->List( );
-		$houses = $list->filter( fn( Apartment $apartment ) => $apartment->type == ApartmentType::House );
+		$houses = $apartments->GetHouses( );
 		
 		$orderIndex = [ ];
 		
