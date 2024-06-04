@@ -1,19 +1,18 @@
 <?php
 namespace App\Repositories;
 
-use Illuminate\Database\Eloquent\Collection;
 use App\Models\Apartment;
 use App\Models\ApartmentPrice;
 use App\Enums\ApartmentType;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class DatabaseApartmentRepository implements ApartmentRepository {
 	use OrderPeriodUtils;
 	
-	public function List( ) : Collection {
-		return Apartment::orderBy( 'number', 'asc' )->with( 'currentPrice' )->get( );
+	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
+		return Apartment::orderBy( 'id', 'desc' )->with( 'currentPrice' )->paginate( $pageSize, [ '*' ], 'page', $page );
 	}
 	
 	public function Find( int $id ) : Apartment {

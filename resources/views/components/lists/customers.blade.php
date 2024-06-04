@@ -10,6 +10,10 @@
 	<td>{{ $customer->car_number }}</td>
 </tr>
 @endforeach
-</tbody><tfoot><tr><td colspan="3">
+</tbody>
+@if ( $paginator->hasPages( ) )
+<tfoot><tr><td colspan="3">
 	<x-pagination :paginator="$paginator"/>
-</td></tr></tfoot></table>
+</td></tr></tfoot>
+@endif
+</table>

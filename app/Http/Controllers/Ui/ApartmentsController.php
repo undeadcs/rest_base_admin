@@ -18,7 +18,7 @@ class ApartmentsController extends Controller {
 		$this->topNavBar = $topNavBar;
 	}
 	
-	public function index( ApartmentRepository $apartments ) : View {
+	public function index( Request $request, ApartmentRepository $apartments ) : View {
 		$columns = [
 			( object ) [ 'fieldName' => 'title',	'title' => __( 'Наименование'	) ],
 			( object ) [ 'fieldName' => 'number',	'title' => __( 'Номер'			) ],
@@ -28,15 +28,7 @@ class ApartmentsController extends Controller {
 		
 		return view( 'components.pages.'.TopPage::Apartments->value, [
 			'top_nav_items' => $this->topNavBar->items( ),
-			'apartments' => $apartments->List( ),
-			'columns' => $columns,
-			'baseUrl' => url( '/apartments' ),
-			'linkFieldName' => 'title',
-			'editFieldName' => 'id',
-			'newEntityUrl' => url( '/apartments/add' ),
-			'customs' => [
-				'price' => fn( Apartment $apartment ) => $apartment->currentPrice ? $apartment->currentPrice->price : '-'
-			]
+			'paginator' => $apartments->List( ( int ) $request->input( 'page' ), 17 )
 		] );
 	}
 	
