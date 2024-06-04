@@ -57,15 +57,11 @@ class ApartmentsController extends Controller {
 	}
 	
 	public function edit( Apartment $apartment, Request $request, ApartmentRepository $apartments ) : View {
-		$paginator = $apartments->ListOrdersWithCustomer( $apartment, ( int ) $request->input( 'page' ) );
-		
 		return view( 'components.pages.apartment-form', [
-			'top_nav_items' => $this->topNavBar->items( ),
-			'apartment' => $apartment,
-			'types' => $this->ApartmentTypes( ),
-			'orders'		=> $paginator->getCollection( ),
-			'currentPage'	=> $paginator->currentPage( ),
-			'lastPage'		=> $paginator->isEmpty( ) ? null : $paginator->lastPage( )
+			'top_nav_items'	=> $this->topNavBar->items( ),
+			'apartment'		=> $apartment,
+			'types'			=> $this->ApartmentTypes( ),
+			'orders'		=> $apartments->ListOrdersWithCustomer( $apartment, ( int ) $request->input( 'page' ) )
 		] );
 	}
 }
