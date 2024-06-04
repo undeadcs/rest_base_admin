@@ -29,12 +29,10 @@ class CustomersController extends Controller {
 	}
 	
 	public function edit( Customer $customer, Request $request, CustomerRepository $customers ) : View {
-		$paginator = $customers->ListOrdersWithApartment( $customer, ( int ) $request->input( 'page' ) );
-		
 		return view( 'components.pages.customer-form', [
 			'top_nav_items'	=> $this->topNavBar->items( ),
 			'customer'		=> $customer,
-			'orders'		=> $paginator
+			'orders'		=> $customers->ListOrdersWithApartment( $customer, ( int ) $request->input( 'page' ) )
 		] );
 	}
 }

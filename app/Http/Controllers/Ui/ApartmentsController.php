@@ -19,16 +19,9 @@ class ApartmentsController extends Controller {
 	}
 	
 	public function index( Request $request, ApartmentRepository $apartments ) : View {
-		$columns = [
-			( object ) [ 'fieldName' => 'title',	'title' => __( 'Наименование'	) ],
-			( object ) [ 'fieldName' => 'number',	'title' => __( 'Номер'			) ],
-			( object ) [ 'fieldName' => 'capacity',	'title' => __( 'Вместимость'	) ],
-			( object ) [ 'fieldName' => 'price',	'title' => __( 'Цена'			) ]
-		];
-		
 		return view( 'components.pages.'.TopPage::Apartments->value, [
-			'top_nav_items' => $this->topNavBar->items( ),
-			'paginator' => $apartments->List( ( int ) $request->input( 'page' ), 17 )
+			'top_nav_items'	=> $this->topNavBar->items( ),
+			'paginator'		=> $apartments->List( ( int ) $request->input( 'page' ), 17 )
 		] );
 	}
 	

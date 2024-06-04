@@ -5,10 +5,11 @@ namespace App\Repositories;
 use Illuminate\Database\Eloquent\Collection;
 use App\Models\Inventory;
 use App\Models\InventoryPrice;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class DatabaseInventoryRepository implements InventoryRepository {
-	public function List( ) : Collection {
-		return Inventory::orderBy( 'title', 'asc' )->with( 'currentPrice' )->get( );
+	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
+		return Inventory::orderBy( 'title', 'asc' )->with( 'currentPrice' )->paginate( $pageSize, [ '*' ], 'page', $page );
 	}
 	
 	public function ListByOrder( int $orderId ) : Collection {

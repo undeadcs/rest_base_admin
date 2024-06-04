@@ -22,8 +22,8 @@ class OrdersController extends Controller {
 	
 	public function index( Request $request, OrderRepository $orders ) : View {
 		return view( 'components.pages.'.TopPage::Orders->value, [
-			'top_nav_items' => $this->topNavBar->items( ),
-			'paginator' => $orders->List( ( int ) $request->input( 'page' ), 17 )
+			'top_nav_items'	=> $this->topNavBar->items( ),
+			'paginator'		=> $orders->List( ( int ) $request->input( 'page' ), 17 )
 		] );
 	}
 	

@@ -17,23 +17,10 @@ class InventoriesController extends Controller {
 		$this->topNavBar = $topNavBar;
 	}
 	
-	public function index( InventoryRepository $inventories ) : View {
-		$columns = [
-			( object ) [ 'fieldName' => 'title',	'title' => __( 'Наименование'	) ],
-			( object ) [ 'fieldName' => 'price',	'title' => __( 'Цена'			) ]
-		];
-		
+	public function index( Request $request, InventoryRepository $inventories ) : View {
 		return view( 'components.pages.'.TopPage::Inventories->value, [
-			'top_nav_items' => $this->topNavBar->items( ),
-			'inventories' => $inventories->List( ),
-			'columns' => $columns,
-			'baseUrl' => url( '/inventories' ),
-			'linkFieldName' => 'title',
-			'editFieldName' => 'id',
-			'newEntityUrl' => url( '/inventories/add' ),
-			'customs' => [
-				'price' => fn( Inventory $inventory ) => $inventory->currentPrice ? $inventory->currentPrice->price : '-'
-			]
+			'top_nav_items'	=> $this->topNavBar->items( ),
+			'paginator'		=> $inventories->List( ( int ) $request->input( 'page' ), 17 )
 		] );
 	}
 	
