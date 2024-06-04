@@ -23,18 +23,10 @@ class CustomersController extends Controller {
 			( object ) [ 'fieldName' => 'phone_number',	'title' => __( 'Телефон'		) ],
 			( object ) [ 'fieldName' => 'car_number',	'title' => __( 'Номер машины'	) ]
 		];
-		$paginator = $customers->List( ( int ) $request->input( 'page' ), 17 );
 		
 		return view( 'components.pages.'.TopPage::Customers->value, [
 			'top_nav_items'	=> $this->topNavBar->items( ),
-			'customers'		=> $paginator->getCollection( ),
-			'columns'		=> $columns,
-			'baseUrl'		=> url( '/customers' ),
-			'linkFieldName'	=> 'name',
-			'editFieldName'	=> 'id',
-			'newEntityUrl'	=> url( '/customers/add' ),
-			'currentPage'	=> $paginator->currentPage( ),
-			'lastPage'		=> $paginator->isEmpty( ) ? null : $paginator->lastPage( )
+			'paginator'		=> $customers->List( ( int ) $request->input( 'page' ), 17 )
 		] );
 	}
 	

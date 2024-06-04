@@ -1,13 +1,13 @@
 <?php
 
-namespace App\View\Components\Tables;
+namespace App\View\Components\Lists;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-class Orders extends Component {
+class Customers extends Component {
 	public LengthAwarePaginator $paginator;
 	
 	/**
@@ -21,6 +21,6 @@ class Orders extends Component {
 	 * Get the view / contents that represent the component.
 	 */
 	public function render( ) : View|Closure|string {
-		return view( 'components.tables.orders' );
+		return view( 'components.lists.customers' );
 	}
 }
