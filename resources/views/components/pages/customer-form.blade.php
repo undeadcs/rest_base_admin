@@ -3,7 +3,7 @@
 	<h1>@if ( $customer->id ) {{ __( 'Изменение данных клиента' ) }} @else {{ __( 'Добавление клиента' ) }} @endif</h1>
 	<x-errors/>
 	@if ( $customer->id )
-	<x-forms.customer :customer="$customer" :orders="$orders" :current-page="$currentPage" :last-page="$lastPage"/>
+	<x-forms.customer :customer="$customer" :orders="$orders"/>
 	@else
 	<x-forms.customer :customer="$customer"/>
 	@endif
