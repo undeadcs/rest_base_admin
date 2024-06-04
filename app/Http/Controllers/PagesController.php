@@ -31,10 +31,6 @@ class PagesController extends Controller {
 			$paginator = $apartments->ListOrdersByPeriod( $apartment, $from, $to );
 			
 			if ( $paginator->total( ) ) {
-				if ( $paginator->lastPage( ) > 1 ) {
-					dump( $apartment->toArray( ), $from->format( 'Y-m-d H:i:s' ).' '.$to->format( 'Y-m-d H:i:s' ), $paginator->lastPage( ) );
-				}
-				
 				foreach( $paginator->items( ) as $order ) {
 					$begin = ( clone $order->from )->setTime( 0, 0, 0 );
 					$end = ( clone $order->to )->setTime( 23, 59, 59 );

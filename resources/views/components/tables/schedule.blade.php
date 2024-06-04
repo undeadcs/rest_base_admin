@@ -18,7 +18,7 @@
 	<input class="btn btn-primary" type="submit" value="{{ __( 'применить' ) }}"/>
 	<a class="btn btn-secondary" href="/">{{ __( 'сброс' ) }}</a>
 </div></form>
-<div class="table->responsive"><table class="table table-striped align-middle"><thead><tr>
+<div class=""><table class="table align-middle"><thead><tr>
 	<th class="col-1" style="min-width: 150px;">&nbsp;</th>
 	@foreach( $days as $day )
 	<th>{{ $day->format( 'd.m.Y' ) }}</th>
@@ -26,7 +26,7 @@
 </tr></thead><tbody>
 @foreach( $apartments as $apartment )
 <tr>
-	<td><a href="{{ url( '/apartments' ) }}/{{ $apartment->id }}">{{ $apartment->title }}</a></td>
+	<td class="table-secondary"><a href="{{ url( '/apartments' ) }}/{{ $apartment->id }}">{{ $apartment->title }}</a></td>
 	@foreach( $days as $day )
 	@if ( $HasOrdersAtDay( $apartment, $day ) )
 		<td>
