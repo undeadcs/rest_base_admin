@@ -11,13 +11,22 @@ use App\Models\Order;
 class ApartmentsTest extends TestCase {
 	use RefreshDatabase, WithFaker, OrderPeriodUtils;
 	
-	public function test_listing( ) : void {
+	public function test_listing_first_page( ) : void {
 		$totalCount = 30;
-		$apartments = Apartment::factory( )->count( $totalCount )->create( );
+		$apartments = Apartment::factory( )->hasPrices( 1 )->count( $totalCount )->create( );
 		
 		$this->getJson( '/api/apartments' )
 			->assertStatus( 200 )
-			->assertJson( $apartments->sortBy( 'number' )->values( )->toArray( ) );
+			->assertJson( [ 'totalCount' => $totalCount, 'data' => $apartments->sortByDesc( 'id' )->slice( 0, 25 )->values( )->toArray( ) ] );
+	}
+	
+	public function test_listing_second_page( ) : void {
+		$totalCount = 30;
+		$apartments = Apartment::factory( )->hasPrices( 1 )->count( $totalCount )->create( );
+		
+		$this->getJson( '/api/apartments/?page=2' )
+			->assertStatus( 200 )
+			->assertJson( [ 'totalCount' => $totalCount, 'data' =>  $apartments->sortByDesc( 'id' )->slice( 25, 25 )->values( )->toArray( ) ] );
 	}
 	
 	public function test_instance( ) : void {

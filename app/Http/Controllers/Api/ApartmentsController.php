@@ -16,8 +16,10 @@ class ApartmentsController extends Controller {
 		$this->apartments = $apartments;
 	}
 	
-	public function index( ) : JsonResponse {
-		return response( )->json( $this->apartments->List( )->toArray( ) );
+	public function index( Request $request ) : JsonResponse {
+		$paginator = $this->apartments->List( ( int ) $request->input( 'page' ) );
+		
+		return response( )->json( [ 'totalCount' => $paginator->total( ), 'data' => $paginator->items( ) ] );
 	}
 	
 	public function instance( Apartment $apartment ) : JsonResponse {
