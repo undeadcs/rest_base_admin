@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Repositories\InventoryRepository;
 use Illuminate\Http\JsonResponse;
 use App\Models\Inventory;
+use Illuminate\Http\Request;
 
 class InventoriesController extends Controller {
 	protected InventoryRepository $inventories;
@@ -14,8 +15,10 @@ class InventoriesController extends Controller {
 		$this->inventories = $inventories;
 	}
 	
-	public function index( ) : JsonResponse {
-		return response( )->json( $this->inventories->List( )->toArray( ) );
+	public function index( Request $request ) : JsonResponse {
+		$paginator = $this->inventories->List( ( int ) $request->input( 'page' ) );
+		
+		return response( )->json( [ 'totalCount' => $paginator->total( ), 'data' => $paginator->items( ) ] );
 	}
 	
 	public function instance( Inventory $inventory ) : JsonResponse {

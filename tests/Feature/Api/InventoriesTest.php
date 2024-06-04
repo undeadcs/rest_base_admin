@@ -10,12 +10,22 @@ use App\Models\Inventory;
 class InventoriesTest extends TestCase {
 	use RefreshDatabase, WithFaker;
 	
-	public function test_listing( ) : void {
-		$inventories = Inventory::factory( )->count( 10 )->create( );
+	public function test_listing_first_page( ) : void {
+		$totalCount = 30;
+		$inventories = Inventory::factory( )->count( $totalCount )->create( );
 		
 		$this->getJson( '/api/inventories' )
 			->assertStatus( 200 )
-			->assertJson( $inventories->sortBy( 'title' )->values( )->toArray( ) );
+			->assertJson( [ 'totalCount' => $totalCount, 'data' => $inventories->sortBy( 'title' )->slice( 0, 25 )->values( )->toArray( ) ] );
+	}
+	
+	public function test_listing_second_page( ) : void {
+		$totalCount = 30;
+		$inventories = Inventory::factory( )->count( $totalCount )->create( );
+		
+		$this->getJson( '/api/inventories/?page=2' )
+			->assertStatus( 200 )
+			->assertJson( [ 'totalCount' => $totalCount, 'data' => $inventories->sortBy( 'title' )->slice( 25, 25 )->values( )->toArray( ) ] );
 	}
 	
 	public function test_instance( ) : void {
