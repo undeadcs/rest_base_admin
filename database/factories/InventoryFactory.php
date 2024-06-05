@@ -15,7 +15,8 @@ class InventoryFactory extends Factory {
 	 */
 	public function definition( ) : array {
 		return [
-			'title' => $this->faker->regexify( '[a-zA-Z]{5}' )
+			'title'		=> $this->faker->regexify( '[a-zA-Z]{5}' ),
+			'comment'	=> $this->faker->text( )
 		];
 	}
 }
