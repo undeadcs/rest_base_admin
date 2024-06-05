@@ -17,15 +17,13 @@ use App\Repositories\ApartmentRepository;
 use App\Models\Payment;
 use App\Models\Inventory;
 use Carbon\Carbon;
+use Tests\Mocking\InventoryArgument;
+use Tests\Mocking\ApartmentArgument;
+use Tests\Mocking\CustomerArgument;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * Тестирование обработки действий с заказом
- * 
- * сначала надо определить клиента, если его нет в базе, то создать
- * если есть, то сравнить данные, возможно их надо мержить
- */
 class OrdersControllerTest extends TestCase {
-	use RefreshDatabase, WithFaker;
+	use RefreshDatabase, WithFaker, InventoryArgument, ApartmentArgument, CustomerArgument;
 	
 	protected function ExpectsFindCustomer( Customer $customer ) : void {
 		$this->instance( CustomerRepository::class, \Mockery::mock( CustomerRepository::class, function( MockInterface $mock ) use ( $customer ) {
@@ -37,33 +35,6 @@ class OrdersControllerTest extends TestCase {
 		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment ) {
 			$mock->shouldReceive( 'Find' )->with( $apartment->id )->once( )->andReturn( $apartment );
 		} ) );
-	}
-	
-	protected function CustomerArgument( Customer $customer ) : Closure {
-		return \Mockery::on( function( $value ) use( $customer ) {
-			$this->assertInstanceOf( Customer::class, $value );
-			$this->assertEquals( $customer->id,				$value->id );
-			$this->assertEquals( $customer->name,			$value->name );
-			$this->assertEquals( $customer->phone_number,	$value->phone_number );
-			$this->assertEquals( $customer->car_number,		$value->car_number );
-			$this->assertEquals( $customer->comment,		$value->comment );
-			
-			return true;
-		} );
-	}
-	
-	protected function ApartmentArgument( Apartment $apartment ) : Closure {
-		return \Mockery::on( function( $value ) use( $apartment ) {
-			$this->assertInstanceOf( Apartment::class, $value );
-			$this->assertEquals( $apartment->id,		$value->id );
-			$this->assertEquals( $apartment->title,		$value->title );
-			$this->assertEquals( $apartment->type,		$value->type );
-			$this->assertEquals( $apartment->number,	$value->number );
-			$this->assertEquals( $apartment->capacity,	$value->capacity );
-			$this->assertEquals( $apartment->comment,	$value->comment );
-			
-			return true;
-		} );
 	}
 	
 	protected function CarbonArgument( Carbon $time ) : Closure {
@@ -115,8 +86,16 @@ class OrdersControllerTest extends TestCase {
 		$this->from( '/orders/add' )->post( '/orders', $data )->assertRedirect( '/orders/add' );
 	}
 	
-	public function test_adding_order_add_success( ) : void {
-		$order = Order::factory( )->state( [ 'status' => OrderStatus::Pending ] )->create( );
+	public static function commentProvider( ) : array {
+		return [
+			'comment_filled' => [ fake( )->text( ) ],
+			'comment_empty' => [ '' ]
+		];
+	}
+	
+	#[ DataProvider( 'commentProvider' ) ]
+	public function test_adding_order_add_success( string $comment ) : void {
+		$order = Order::factory( )->state( [ 'status' => OrderStatus::Pending ] )->create( [ 'comment' => $comment ] );
 		$data = [
 			'apartment_id'	=> $order->apartment->id,
 			'customer_id'	=> $order->customer->id,
@@ -209,9 +188,10 @@ class OrdersControllerTest extends TestCase {
 		$this->from( $url )->put( $url, $data )->assertRedirect( $url );
 	}
 	
-	public function test_updating_order_update_success( ) : void {
+	#[ DataProvider( 'commentProvider' ) ]
+	public function test_updating_order_update_success( string $comment ) : void {
 		$order = Order::factory( )->create( );
-		$updateOrder = Order::factory( )->make( );
+		$updateOrder = Order::factory( )->make( [ 'comment' => $comment ] );
 		$data = [
 			'apartment_id'	=> $order->apartment->id,
 			'customer_id'	=> $order->customer->id,
@@ -331,16 +311,6 @@ class OrdersControllerTest extends TestCase {
 		
 		$url = '/orders/'.$order->id;
 		$this->from( $url )->put( $url, $data )->assertRedirect( '/orders' );
-	}
-	
-	protected function InventoryArgument( Inventory $inventory ) : Closure {
-		return \Mockery::on( function( $value ) use( $inventory ) {
-			$this->assertInstanceOf( Inventory::class, $value );
-			$this->assertEquals( $inventory->id,	$value->id );
-			$this->assertEquals( $inventory->title,	$value->title );
-			
-			return true;
-		} );
 	}
 	
 	public function test_updating_inventory_add( ) : void {
