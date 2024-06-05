@@ -15,9 +15,9 @@ interface OrderRepository {
 	public function List( int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator;
 	public function ListByPeriod( Carbon $from, Carbon $to, int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator;
 	public function Find( int $id ) : Order;
-	public function Add( Customer $customer, Apartment $apartment, string $from, string $to, int $personsNumber, string $comment ) : ?Order;
+	public function Add( Customer $customer, Apartment $apartment, Carbon $from, Carbon $to, int $personsNumber, string $comment ) : ?Order;
 	public function Update(
-		Order $order, Customer $customer, Apartment $apartment, OrderStatus $status, string $from, string $to, int $personsNumber, string $comment
+		Order $order, Customer $customer, Apartment $apartment, OrderStatus $status, Carbon $from, Carbon $to, int $personsNumber, string $comment
 	) : bool;
 	public function PaymentAdd( Order $order, float $amount, string $comment ) : ?Payment;
 	public function PaymentUpdate( Payment $payment, float $amount, string $comment ) : bool;

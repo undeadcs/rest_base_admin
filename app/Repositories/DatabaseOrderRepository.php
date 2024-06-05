@@ -31,7 +31,7 @@ class DatabaseOrderRepository implements OrderRepository {
 		return Order::findOrFail( $id );
 	}
 	
-	public function Add( Customer $customer, Apartment $apartment, string $from, string $to, int $personsNumber, string $comment ) : ?Order {
+	public function Add( Customer $customer, Apartment $apartment, Carbon $from, Carbon $to, int $personsNumber, string $comment ) : ?Order {
 		$order = new Order;
 		$order->from	= $from;
 		$order->to		= $to;
@@ -47,7 +47,7 @@ class DatabaseOrderRepository implements OrderRepository {
 	}
 		
 	public function Update(
-		Order $order, Customer $customer, Apartment $apartment, OrderStatus $status, string $from, string $to, int $personsNumber, string $comment
+		Order $order, Customer $customer, Apartment $apartment, OrderStatus $status, Carbon $from, Carbon $to, int $personsNumber, string $comment
 	) : bool {
 		$update = false;
 		

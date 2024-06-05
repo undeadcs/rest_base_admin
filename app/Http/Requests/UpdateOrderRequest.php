@@ -33,7 +33,11 @@ class UpdateOrderRequest extends FormRequest {
 			'payments.*.comment'	=> [ 'required', 'string' ],
 			'inventories.*.id'		=> [ 'required', 'integer' ],
 			'inventories.*.comment'	=> [ 'required', 'string' ],
-			'inventories.*.inventory_id' => [ 'numeric' ]
+			'inventories.*.inventory_id' => [ 'numeric' ],
+			'from_hour'		=> [ 'required', 'numeric', 'min:0', 'max:23' ],
+			'from_minute'	=> [ 'required', 'numeric', 'min:0', 'max:59' ],
+			'to_hour'		=> [ 'required', 'numeric', 'min:0', 'max:23' ],
+			'to_minute'		=> [ 'required', 'numeric', 'min:0', 'max:59' ]
 		];
 	}
 }

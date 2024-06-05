@@ -28,8 +28,8 @@ class OrdersController extends Controller {
 		$input = $request->validated( );
 		$customer = $this->customers->Find( $input[ 'customer_id' ] );
 		$apartment = $this->apartments->Find( $input[ 'apartment_id' ] );
-		$from = Carbon::createFromFormat( 'd.m.Y', $input[ 'from' ] )->format( 'Y-m-d' );
-		$to = Carbon::createFromFormat( 'd.m.Y', $input[ 'to' ] )->format( 'Y-m-d' );
+		$from = Carbon::createFromFormat( 'd.m.Y H:i:s', $input[ 'from' ].' '.$input[ 'from_hour' ].':'.$input[ 'from_minute' ].':00' );
+		$to = Carbon::createFromFormat( 'd.m.Y H:i:s', $input[ 'to' ].' '.$input[ 'to_hour' ].':'.$input[ 'to_minute' ].':00' );
 		
 		if ( !$this->orders->Add( $customer, $apartment, $from, $to, $input[ 'persons_number' ], $input[ 'comment' ] ) ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи о заявке' ) ] );
@@ -42,8 +42,8 @@ class OrdersController extends Controller {
 		$input = $request->validated( );
 		$customer = $this->customers->Find( $input[ 'customer_id' ] );
 		$apartment = $this->apartments->Find( $input[ 'apartment_id' ] );
-		$from = Carbon::createFromFormat( 'd.m.Y', $input[ 'from' ] )->format( 'Y-m-d' );
-		$to = Carbon::createFromFormat( 'd.m.Y', $input[ 'to' ] )->format( 'Y-m-d' );
+		$from = Carbon::createFromFormat( 'd.m.Y H:i:s', $input[ 'from' ].' '.$input[ 'from_hour' ].':'.$input[ 'from_minute' ].':00' );
+		$to = Carbon::createFromFormat( 'd.m.Y H:i:s', $input[ 'to' ].' '.$input[ 'to_hour' ].':'.$input[ 'to_minute' ].':00' );
 		$status = OrderStatus::from( $input[ 'status' ] );
 		
 		if ( !$this->orders->Update( $order, $customer, $apartment, $status, $from, $to, $input[ 'persons_number' ], $input[ 'comment' ] ) ) {

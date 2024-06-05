@@ -16,6 +16,7 @@ use App\Repositories\OrderRepository;
 use App\Repositories\ApartmentRepository;
 use App\Models\Payment;
 use App\Models\Inventory;
+use Carbon\Carbon;
 
 /**
  * Тестирование обработки действий с заказом
@@ -40,12 +41,12 @@ class OrdersControllerTest extends TestCase {
 	
 	protected function CustomerArgument( Customer $customer ) : Closure {
 		return \Mockery::on( function( $value ) use( $customer ) {
-			// в фабрике id идет в конце из-за этого проваливается прямое сравнение объектов
-			$this->assertEquals( $value->id, $customer->id );
-			$this->assertEquals( $value->name, $customer->name );
-			$this->assertEquals( $value->phone_number, $customer->phone_number );
-			$this->assertEquals( $value->car_number, $customer->car_number );
-			$this->assertEquals( $value->comment, $customer->comment );
+			$this->assertInstanceOf( Customer::class, $value );
+			$this->assertEquals( $customer->id,				$value->id );
+			$this->assertEquals( $customer->name,			$value->name );
+			$this->assertEquals( $customer->phone_number,	$value->phone_number );
+			$this->assertEquals( $customer->car_number,		$value->car_number );
+			$this->assertEquals( $customer->comment,		$value->comment );
 			
 			return true;
 		} );
@@ -53,13 +54,22 @@ class OrdersControllerTest extends TestCase {
 	
 	protected function ApartmentArgument( Apartment $apartment ) : Closure {
 		return \Mockery::on( function( $value ) use( $apartment ) {
-			// в фабрике id идет в конце из-за этого проваливается прямое сравнение объектов
-			$this->assertEquals( $value->id, $apartment->id );
-			$this->assertEquals( $value->title, $apartment->title );
-			$this->assertEquals( $value->type, $apartment->type );
-			$this->assertEquals( $value->number, $apartment->number );
-			$this->assertEquals( $value->capacity, $apartment->capacity );
-			$this->assertEquals( $value->comment, $apartment->comment );
+			$this->assertInstanceOf( Apartment::class, $value );
+			$this->assertEquals( $apartment->id,		$value->id );
+			$this->assertEquals( $apartment->title,		$value->title );
+			$this->assertEquals( $apartment->type,		$value->type );
+			$this->assertEquals( $apartment->number,	$value->number );
+			$this->assertEquals( $apartment->capacity,	$value->capacity );
+			$this->assertEquals( $apartment->comment,	$value->comment );
+			
+			return true;
+		} );
+	}
+	
+	protected function CarbonArgument( Carbon $time ) : Closure {
+		return \Mockery::on( function( $value ) use( $time ) {
+			$this->assertInstanceOf( Carbon::class, $value );
+			$this->assertEquals( $time, $value );
 			
 			return true;
 		} );
@@ -72,7 +82,8 @@ class OrdersControllerTest extends TestCase {
 				$mock->shouldReceive( 'Add' )
 					->with(
 						$this->CustomerArgument( $customer ), $this->ApartmentArgument( $apartment ),
-						$order->from->format( 'Y-m-d' ), $order->to->format( 'Y-m-d' ), $order->persons_number, $order->comment
+						$this->CarbonArgument( $order->from ), $this->CarbonArgument( $order->to ),
+						$order->persons_number, $order->comment
 					)
 					->once( )
 					->andReturn( $returnOrder );
@@ -90,7 +101,11 @@ class OrdersControllerTest extends TestCase {
 			'from'			=> $order->from->format( 'd.m.Y' ),
 			'to'			=> $order->to->format( 'd.m.Y' ),
 			'persons_number' => $order->persons_number,
-			'comment'		=> $order->comment
+			'comment'		=> $order->comment,
+			'from_hour'		=> $order->from->format( 'H' ),
+			'from_minute'	=> $order->from->format( 'i' ),
+			'to_hour'		=> $order->to->format( 'H' ),
+			'to_minute'		=> $order->to->format( 'i' )
 		];
 		
 		$this->ExpectsFindCustomer( $customer );
@@ -108,7 +123,11 @@ class OrdersControllerTest extends TestCase {
 			'from'			=> $order->from->format( 'd.m.Y' ),
 			'to'			=> $order->to->format( 'd.m.Y' ),
 			'persons_number' => $order->persons_number,
-			'comment'		=> $order->comment
+			'comment'		=> $order->comment,
+			'from_hour'		=> $order->from->format( 'H' ),
+			'from_minute'	=> $order->from->format( 'i' ),
+			'to_hour'		=> $order->to->format( 'H' ),
+			'to_minute'		=> $order->to->format( 'i' )
 		];
 		
 		$this->ExpectsFindCustomer( $order->customer );
@@ -120,16 +139,16 @@ class OrdersControllerTest extends TestCase {
 	
 	protected function OrderArgument( Order $order ) : Closure {
 		return \Mockery::on( function( $value ) use( $order ) {
-			// в фабрике id идет в конце из-за этого проваливается прямое сравнение объектов
-			$this->assertEquals( $value->id, $order->id );
-			$this->assertEquals( $value->customer_id, $order->customer_id );
-			$this->assertEquals( $value->apartment_id, $order->apartment_id );
-			$this->assertEquals( $value->apartment_price_id, $order->apartment_price_id );
-			$this->assertEquals( $value->status, $order->status );
-			$this->assertEquals( $value->from, $order->from );
-			$this->assertEquals( $value->to, $order->to );
-			$this->assertEquals( $value->persons_number, $order->persons_number );
-			$this->assertEquals( $value->comment, $order->comment );
+			$this->assertInstanceOf( Order::class, $value );
+			$this->assertEquals( $order->id,					$value->id );
+			$this->assertEquals( $order->customer_id,			$value->customer_id );
+			$this->assertEquals( $order->apartment_id,			$value->apartment_id );
+			$this->assertEquals( $order->apartment_price_id,	$value->apartment_price_id );
+			$this->assertEquals( $order->status,				$value->status );
+			$this->assertEquals( $order->from,					$value->from );
+			$this->assertEquals( $order->to,					$value->to );
+			$this->assertEquals( $order->persons_number,		$value->persons_number );
+			$this->assertEquals( $order->comment,				$value->comment );
 			
 			return true;
 		} );
@@ -137,11 +156,11 @@ class OrdersControllerTest extends TestCase {
 	
 	protected function PaymentArgument( Payment $payment ) : Closure {
 		return \Mockery::on( function( $value ) use( $payment ) {
-			// в фабрике id идет в конце из-за этого проваливается прямое сравнение объектов
-			$this->assertEquals( $value->id, $payment->id );
-			$this->assertEquals( $value->order_id, $payment->order_id );
-			$this->assertEquals( $value->amount, $payment->amount );
-			$this->assertEquals( $value->comment, $payment->comment );
+			$this->assertInstanceOf( Payment::class, $value );
+			$this->assertEquals( $payment->id,			$value->id );
+			$this->assertEquals( $payment->order_id,	$value->order_id );
+			$this->assertEquals( $payment->amount,		$value->amount );
+			$this->assertEquals( $payment->comment,		$value->comment );
 			
 			return true;
 		} );
@@ -156,7 +175,7 @@ class OrdersControllerTest extends TestCase {
 				$mock->shouldReceive( 'Update' )
 					->with(
 						$this->OrderArgument( $order ), $this->CustomerArgument( $customer ), $this->ApartmentArgument( $apartment ),
-						$updateOrder->status, $updateOrder->from->format( 'Y-m-d' ), $updateOrder->to->format( 'Y-m-d' ),
+						$updateOrder->status, $this->CarbonArgument( $updateOrder->from ), $this->CarbonArgument( $updateOrder->to ),
 						$updateOrder->persons_number, $updateOrder->comment
 					)
 					->once( )
@@ -175,7 +194,11 @@ class OrdersControllerTest extends TestCase {
 			'from'			=> $updateOrder->from->format( 'd.m.Y' ),
 			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
 			'persons_number' => $updateOrder->persons_number,
-			'comment'		=> $updateOrder->comment
+			'comment'		=> $updateOrder->comment,
+			'from_hour'		=> $updateOrder->from->format( 'H' ),
+			'from_minute'	=> $updateOrder->from->format( 'i' ),
+			'to_hour'		=> $updateOrder->to->format( 'H' ),
+			'to_minute'		=> $updateOrder->to->format( 'i' )
 		];
 		
 		$this->ExpectsFindCustomer( $order->customer );
@@ -196,7 +219,11 @@ class OrdersControllerTest extends TestCase {
 			'from'			=> $updateOrder->from->format( 'd.m.Y' ),
 			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
 			'persons_number' => $updateOrder->persons_number,
-			'comment'		=> $updateOrder->comment
+			'comment'		=> $updateOrder->comment,
+			'from_hour'		=> $updateOrder->from->format( 'H' ),
+			'from_minute'	=> $updateOrder->from->format( 'i' ),
+			'to_hour'		=> $updateOrder->to->format( 'H' ),
+			'to_minute'		=> $updateOrder->to->format( 'i' )
 		];
 		
 		$this->ExpectsFindCustomer( $order->customer );
@@ -219,6 +246,10 @@ class OrdersControllerTest extends TestCase {
 			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
 			'persons_number' => $updateOrder->persons_number,
 			'comment'		=> $updateOrder->comment,
+			'from_hour'		=> $updateOrder->from->format( 'H' ),
+			'from_minute'	=> $updateOrder->from->format( 'i' ),
+			'to_hour'		=> $updateOrder->to->format( 'H' ),
+			'to_minute'		=> $updateOrder->to->format( 'i' ),
 			'payments'		=> [ [
 				'id'		=> 0,
 				'amount'	=> $payment->amount,
@@ -235,7 +266,7 @@ class OrdersControllerTest extends TestCase {
 				$mock->shouldReceive( 'Update' )
 					->with(
 						$this->OrderArgument( $order ), $this->CustomerArgument( $order->customer ), $this->ApartmentArgument( $order->apartment ),
-						$updateOrder->status, $updateOrder->from->format( 'Y-m-d' ), $updateOrder->to->format( 'Y-m-d' ),
+						$updateOrder->status, $this->CarbonArgument( $updateOrder->from ), $this->CarbonArgument( $updateOrder->to ),
 						$updateOrder->persons_number, $updateOrder->comment
 					)
 					->once( )
@@ -265,6 +296,10 @@ class OrdersControllerTest extends TestCase {
 			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
 			'persons_number' => $updateOrder->persons_number,
 			'comment'		=> $updateOrder->comment,
+			'from_hour'		=> $updateOrder->from->format( 'H' ),
+			'from_minute'	=> $updateOrder->from->format( 'i' ),
+			'to_hour'		=> $updateOrder->to->format( 'H' ),
+			'to_minute'		=> $updateOrder->to->format( 'i' ),
 			'payments'		=> [ [
 				'id'		=> $payment->id,
 				'amount'	=> $updatePayment->amount,
@@ -281,7 +316,7 @@ class OrdersControllerTest extends TestCase {
 				$mock->shouldReceive( 'Update' )
 					->with(
 						$this->OrderArgument( $order ), $this->CustomerArgument( $order->customer ), $this->ApartmentArgument( $order->apartment ),
-						$updateOrder->status, $updateOrder->from->format( 'Y-m-d' ), $updateOrder->to->format( 'Y-m-d' ),
+						$updateOrder->status, $this->CarbonArgument( $updateOrder->from ), $this->CarbonArgument( $updateOrder->to ),
 						$updateOrder->persons_number, $updateOrder->comment
 					)
 					->once( )
@@ -300,9 +335,9 @@ class OrdersControllerTest extends TestCase {
 	
 	protected function InventoryArgument( Inventory $inventory ) : Closure {
 		return \Mockery::on( function( $value ) use( $inventory ) {
-			// в фабрике id идет в конце из-за этого проваливается прямое сравнение объектов
-			$this->assertEquals( $value->id, $inventory->id );
-			$this->assertEquals( $value->title, $inventory->title );
+			$this->assertInstanceOf( Inventory::class, $value );
+			$this->assertEquals( $inventory->id,	$value->id );
+			$this->assertEquals( $inventory->title,	$value->title );
 			
 			return true;
 		} );
@@ -321,6 +356,10 @@ class OrdersControllerTest extends TestCase {
 			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
 			'persons_number' => $updateOrder->persons_number,
 			'comment'		=> $updateOrder->comment,
+			'from_hour'		=> $updateOrder->from->format( 'H' ),
+			'from_minute'	=> $updateOrder->from->format( 'i' ),
+			'to_hour'		=> $updateOrder->to->format( 'H' ),
+			'to_minute'		=> $updateOrder->to->format( 'i' ),
 			'inventories'	=> [ [
 				'id'			=> 0,
 				'inventory_id'	=> $inventory->id,
@@ -337,7 +376,7 @@ class OrdersControllerTest extends TestCase {
 				$mock->shouldReceive( 'Update' )
 					->with(
 						$this->OrderArgument( $order ), $this->CustomerArgument( $order->customer ), $this->ApartmentArgument( $order->apartment ),
-						$updateOrder->status, $updateOrder->from->format( 'Y-m-d' ), $updateOrder->to->format( 'Y-m-d' ),
+						$updateOrder->status, $this->CarbonArgument( $updateOrder->from ), $this->CarbonArgument( $updateOrder->to ),
 						$updateOrder->persons_number, $updateOrder->comment
 					)
 					->once( )
@@ -355,12 +394,7 @@ class OrdersControllerTest extends TestCase {
 	}
 	
 	public function test_updating_inventory_update( ) : void {
-		$order = Order::factory( )
-			->hasAttached(
-				Inventory::factory( )->count( 1 ),
-				fn( ) => [ 'comment' => fake( )->text( ) ]
-			)
-			->create( );
+		$order = Order::factory( )->hasAttached( Inventory::factory( )->count( 1 ), fn( ) => [ 'comment' => fake( )->text( ) ] )->create( );
 		$updateOrder = Order::factory( )->make( );
 		$inventory = $order->inventories->first( );
 		$inventoryComment = $this->faker->text( );
@@ -372,6 +406,10 @@ class OrdersControllerTest extends TestCase {
 			'to'			=> $updateOrder->to->format( 'd.m.Y' ),
 			'persons_number' => $updateOrder->persons_number,
 			'comment'		=> $updateOrder->comment,
+			'from_hour'		=> $updateOrder->from->format( 'H' ),
+			'from_minute'	=> $updateOrder->from->format( 'i' ),
+			'to_hour'		=> $updateOrder->to->format( 'H' ),
+			'to_minute'		=> $updateOrder->to->format( 'i' ),
 			'inventories' => [ [
 				'id'		=> $inventory->id,
 				'comment'	=> $inventoryComment
@@ -387,7 +425,7 @@ class OrdersControllerTest extends TestCase {
 				$mock->shouldReceive( 'Update' )
 					->with(
 						$this->OrderArgument( $order ), $this->CustomerArgument( $order->customer ), $this->ApartmentArgument( $order->apartment ),
-						$updateOrder->status, $updateOrder->from->format( 'Y-m-d' ), $updateOrder->to->format( 'Y-m-d' ),
+						$updateOrder->status, $this->CarbonArgument( $updateOrder->from ), $this->CarbonArgument( $updateOrder->to ),
 						$updateOrder->persons_number, $updateOrder->comment
 					)
 					->once( )
