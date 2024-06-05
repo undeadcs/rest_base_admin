@@ -78,9 +78,7 @@ class DatabaseApartmentRepository implements ApartmentRepository {
 	}
 	
 	public function ListOrders( Apartment $apartment, int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
-		return $apartment->orders( )
-			->orderBy( 'orders.id', 'asc' )
-			->paginate( $pageSize, [ '*' ], 'page', $page );
+		return $apartment->orders( )->orderBy( 'id', 'desc' )->paginate( $pageSize, [ '*' ], 'page', $page );
 	}
 	
 	public function ListOrdersByPeriod( Apartment $apartment, Carbon $from, Carbon $to, int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {

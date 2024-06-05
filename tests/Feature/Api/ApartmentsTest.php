@@ -56,7 +56,7 @@ class ApartmentsTest extends TestCase {
 	public function test_orders_first_page( ) : void {
 		$apartment = Apartment::factory( )->hasOrders( 30 )->create( );
 		$totalCount = $apartment->orders->count( );
-		$data = $apartment->orders->sortBy( 'id' )->slice( 0, 25 )->values( )->toArray( );
+		$data = $apartment->orders->sortByDesc( 'id' )->slice( 0, 25 )->values( )->toArray( );
 		
 		$this->getjson( '/api/apartments/'.$apartment->id.'/orders' )
 			->assertStatus( 200 )
@@ -66,7 +66,7 @@ class ApartmentsTest extends TestCase {
 	public function test_orders_second_page( ) : void {
 		$apartment = Apartment::factory( )->hasOrders( 30 )->create( );
 		$totalCount = $apartment->orders->count( );
-		$data = $apartment->orders->sortBy( 'id' )->slice( 25, 25 )->values( )->toArray( );
+		$data = $apartment->orders->sortByDesc( 'id' )->slice( 25, 25 )->values( )->toArray( );
 		
 		$this->getjson( '/api/apartments/'.$apartment->id.'/orders?page=2' )
 			->assertStatus( 200 )
