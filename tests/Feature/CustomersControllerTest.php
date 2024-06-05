@@ -8,10 +8,11 @@ use Tests\TestCase;
 use App\Models\Customer;
 use App\Repositories\CustomerRepository;
 use Mockery\MockInterface;
-use Mockery\Matcher\Closure;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Tests\Mocking\CustomerArgument;
 
 class CustomersControllerTest extends TestCase {
-	use RefreshDatabase, WithFaker;
+	use RefreshDatabase, WithFaker, CustomerArgument;
 	
 	public function test_add_failed( ) : void {
 		$customer = Customer::factory( )->make( );
@@ -33,8 +34,16 @@ class CustomersControllerTest extends TestCase {
 		$this->from( $url )->post( '/customers', $data )->assertRedirect( $url );
 	}
 	
-	public function test_add_success( ) : void {
-		$customer = Customer::factory( )->create( );
+	public static function commentProvider( ) : array {
+		return [
+			'comment_filled' => [ fake( )->text( ) ],
+			'comment_empty' => [ '' ]
+		];
+	}
+	
+	#[ DataProvider( 'commentProvider' ) ]
+	public function test_add_success( string $comment ) : void {
+		$customer = Customer::factory( )->create( [ 'comment' => $comment ] );
 		$data = [
 			'name'			=> $customer->name,
 			'phone_number'	=> $customer->phone_number,
@@ -50,19 +59,6 @@ class CustomersControllerTest extends TestCase {
 		} ) );
 		
 		$this->from( '/customers/add' )->post( '/customers', $data )->assertRedirect( '/customers' );
-	}
-	
-	protected function CustomerArgument( Customer $customer ) : Closure {
-		return \Mockery::on( function( $value ) use( $customer ) {
-			// в фабрике id идет в конце из-за этого проваливается прямое сравнение объектов
-			$this->assertEquals( $value->id, $customer->id );
-			$this->assertEquals( $value->name, $customer->name );
-			$this->assertEquals( $value->phone_number, $customer->phone_number );
-			$this->assertEquals( $value->car_number, $customer->car_number );
-			$this->assertEquals( $value->comment, $customer->comment );
-			
-			return true;
-		} );
 	}
 	
 	public function test_update_failed( ) : void {
@@ -89,9 +85,10 @@ class CustomersControllerTest extends TestCase {
 		$this->from( $url )->put( $url, $data )->assertRedirect( $url );
 	}
 	
-	public function test_update_success( ) : void {
+	#[ DataProvider( 'commentProvider' ) ]
+	public function test_update_success( string $comment ) : void {
 		$customer = Customer::factory( )->create( );
-		$updateCustomer = Customer::factory( )->make( );
+		$updateCustomer = Customer::factory( )->make( [ 'comment' => $comment ] );
 		$data = [
 			'name'			=> $updateCustomer->name,
 			'phone_number'	=> $updateCustomer->phone_number,
