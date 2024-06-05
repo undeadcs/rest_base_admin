@@ -12,6 +12,9 @@ use App\Models\Order;
 use App\Repositories\ApartmentRepository;
 use App\Repositories\InventoryRepository;
 use App\Enums\OrderStatus;
+use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class OrdersController extends Controller {
 	protected TopNavBar $topNavBar;
@@ -27,10 +30,26 @@ class OrdersController extends Controller {
 		] );
 	}
 	
-	public function add( ApartmentRepository $apartments ) : View {
+	public function add( Request $request, ApartmentRepository $apartments ) : View {
 		$order = new Order;
-		$order->from = now( );
-		$order->to = now( )->modify( '+1 week' );
+		$order->from = now( )->setTime( 0, 0, 0 );
+		$order->to = now( )->modify( '+1 week' )->setTime( 0, 0, 0 );
+		
+		if ( $request->has( 'from' ) ) {
+			try {
+				$order->from = Carbon::parse( $request->input( 'from' ) );
+				$order->to = ( clone $order->from )->modify( '+1 week' );
+			}
+			catch( InvalidFormatException $e ) {
+			}
+		}
+		if ( $request->has( 'apartment_id' ) ) {
+			try {
+				$order->apartment( )->associate( $apartments->Find( ( int ) $request->input( 'apartment_id' ) ) );
+			}
+			catch( ModelNotFoundException $e ) {
+			}
+		}
 		
 		return view( 'components.pages.order-form', [
 			'top_nav_items'	=> $this->topNavBar->items( ),
