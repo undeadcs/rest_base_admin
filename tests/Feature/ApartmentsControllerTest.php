@@ -9,10 +9,11 @@ use App\Models\Apartment;
 use App\Repositories\ApartmentRepository;
 use Mockery\MockInterface;
 use App\Models\ApartmentPrice;
-use Mockery\Matcher\Closure;
+use Tests\Mocking\ApartmentArgument;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ApartmentsControllerTest extends TestCase {
-	use RefreshDatabase, WithFaker;
+	use RefreshDatabase, WithFaker, ApartmentArgument;
 	
 	public function test_add_failed( ) : void {
 		$apartment = Apartment::factory( )->make( );
@@ -36,7 +37,7 @@ class ApartmentsControllerTest extends TestCase {
 		$this->from( $url )->post( '/apartments', $data )->assertRedirect( $url );
 	}
 	
-	public function test_price_add_failed( ) : void {
+	public function test_add_price_add_failed( ) : void {
 		$apartment = Apartment::factory( )->create( );
 		$price = $this->faker->randomFloat( );
 		$data = [
@@ -63,6 +64,40 @@ class ApartmentsControllerTest extends TestCase {
 		$this->from( $url )->post( '/apartments', $data )->assertRedirect( $url );
 	}
 	
+	public static function commentProvider( ) : array {
+		return [
+			'comment_filled' => [ fake( )->text( ) ],
+			'comment_empty' => [ '' ]
+		];
+	}
+	
+	#[ DataProvider( 'commentProvider' ) ]
+	public function test_add_success( string $comment ) : void {
+		$apartment = Apartment::factory( )->create( [ 'comment' => $comment ] );
+		$price = $this->faker->randomFloat( );
+		$data = [
+			'title'		=> $apartment->title,
+			'number'	=> $apartment->number,
+			'type'		=> $apartment->type->value,
+			'capacity'	=> $apartment->capacity,
+			'price'		=> $price,
+			'comment'	=> $apartment->comment
+		];
+		
+		$this->instance( ApartmentRepository::class, \Mockery::mock( ApartmentRepository::class, function( MockInterface $mock ) use ( $apartment, $price ) {
+			$mock->shouldReceive( 'Add' )
+				->with( $apartment->title, $apartment->type, $apartment->number, $apartment->capacity, $apartment->comment )
+				->once( )
+				->andReturn( $apartment );
+			$mock->shouldReceive( 'PriceAdd' )
+				->with( $apartment, $price )
+				->once( )
+				->andReturn( ApartmentPrice::factory( )->state( [ 'apartment_id' => $apartment ] )->create( ) );
+		} ) );
+		
+		$this->from( '/apartments/add' )->post( '/apartments', $data )->assertRedirect( '/apartments' );
+	}
+	
 	public function test_update_failed( ) : void {
 		$apartment = Apartment::factory( )->create( );
 		$updateApartment = Apartment::factory( )->make( );
@@ -87,20 +122,6 @@ class ApartmentsControllerTest extends TestCase {
 		
 		$url = '/apartments/'.$apartment->id;
 		$this->from( $url )->put( $url, $data )->assertRedirect( $url );
-	}
-	
-	protected function ApartmentArgument( Apartment $apartment ) : Closure {
-		return \Mockery::on( function( $value ) use( $apartment ) {
-			// в фабрике id идет в конце из-за этого проваливается прямое сравнение объектов
-			$this->assertEquals( $value->id, $apartment->id );
-			$this->assertEquals( $value->title, $apartment->title );
-			$this->assertEquals( $value->type, $apartment->type );
-			$this->assertEquals( $value->number, $apartment->number );
-			$this->assertEquals( $value->capacity, $apartment->capacity );
-			$this->assertEquals( $value->comment, $apartment->comment );
-			
-			return true;
-		} );
 	}
 	
 	public function test_update_price_add_failed( ) : void {
@@ -194,11 +215,12 @@ class ApartmentsControllerTest extends TestCase {
 		$this->from( $url )->put( $url, $data )->assertRedirect( '/apartments' );
 	}
 	
-	public function test_update_price_add_success( ) : void {
+	#[ DataProvider( 'commentProvider' ) ]
+	public function test_update_price_add_success( string $comment ) : void {
 		$oldPrice = 100.0;
 		$newPrice = 200.0;
 		$apartment = Apartment::factory( )->has( ApartmentPrice::factory( )->state( [ 'price' => $oldPrice ] ), 'prices' )->create( );
-		$updateApartment = Apartment::factory( )->make( );
+		$updateApartment = Apartment::factory( )->make( [ 'comment' => $comment ] );
 		$data = [
 			'title'		=> $updateApartment->title,
 			'number'	=> $updateApartment->number,

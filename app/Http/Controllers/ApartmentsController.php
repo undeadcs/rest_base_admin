@@ -19,7 +19,7 @@ class ApartmentsController extends Controller {
 		$input = $request->validated( );
 		
 		$apartment = $this->apartments->Add(
-			$input[ 'title' ], ApartmentType::from( $input[ 'type' ] ), $input[ 'number' ], $input[ 'capacity' ], $input[ 'comment' ]
+			$input[ 'title' ], ApartmentType::from( $input[ 'type' ] ), $input[ 'number' ], $input[ 'capacity' ], $input[ 'comment' ] ?? ''
 		);
 		if ( !$apartment ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи' ) ] );
@@ -35,7 +35,7 @@ class ApartmentsController extends Controller {
 		$input = $request->validated( );
 		
 		if ( !$this->apartments->Update(
-			$apartment, $input[ 'title' ], ApartmentType::from( $input[ 'type' ] ), $input[ 'number' ], $input[ 'capacity' ], $input[ 'comment' ]
+			$apartment, $input[ 'title' ], ApartmentType::from( $input[ 'type' ] ), $input[ 'number' ], $input[ 'capacity' ], $input[ 'comment' ] ?? ''
 		) ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи' ) ] );
 		}
