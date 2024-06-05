@@ -14,6 +14,11 @@
 	<input id="price" class="form-control" type="text" name="price" value="{{ $inventory->currentPrice ? $inventory->currentPrice->price : '' }}"/>
 	<div class="form-text">{{ __( 'цена в рублях за сутки. будет использоваться при создании платежей и подсказок. например: 555.55' ) }}</div>
 </div>
+<div class="mb-3">
+	<label for="comment">{{ __( 'Комментарий' ) }}</label>
+	<textarea id="comment" class="form-control" rows="4" name="comment">{{ $inventory->comment }}</textarea>
+	<div class="form-text">{{ __( 'Сюда стоит записывать всякие нюансы по части инвентаря. Желательно разные категории информации разделять, чтобы в дальнейшем их можно было проанализировать и добавить что-нибудь новое' ) }}</div>
+</div>
 <input class="btn btn-primary" type="submit" value="{{ __( 'Сохранить' ) }}"/>
 <a class="btn btn-danger" href="{{ url( '/inventories' ) }}">{{ __( 'Отмена' ) }}</a>
 </form>

@@ -28,4 +28,10 @@ class InventoriesController extends Controller {
 	public function prices( Inventory $inventory ) : JsonResponse {
 		return response( )->json( $inventory->prices->toArray( ) );
 	}
+	
+	public function orders( Inventory $inventory, Request $request ) : JsonResponse {
+		$paginator = $this->inventories->ListOrders( $inventory, ( int ) $request->input( 'page' ) );
+		
+		return response( )->json( [ 'totalCount' => $paginator->total( ), 'data' => $paginator->items( ) ] );
+	}
 }

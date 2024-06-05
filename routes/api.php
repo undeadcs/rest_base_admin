@@ -18,6 +18,7 @@ Route::controller( InventoriesController::class )->prefix( 'inventories' )->grou
 	Route::get( '/', 'index' );
 	Route::get( '/{inventory}', 'instance' );
 	Route::get( '/{inventory}/prices', 'prices' );
+	Route::get( '/{inventory}/orders', 'orders' );
 } );
 
 Route::controller( CustomersController::class )->prefix( 'customers' )->group( function( ) {

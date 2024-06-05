@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * 
  * @property int $id
  * @property string $title
+ * @property string $comment
  */
 class Inventory extends Model {
 	use HasFactory;

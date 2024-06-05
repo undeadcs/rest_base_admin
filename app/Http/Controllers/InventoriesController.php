@@ -17,7 +17,7 @@ class InventoriesController extends Controller {
 	public function add( InventoryRequest $request ) : RedirectResponse {
 		$input = $request->validated( );
 		
-		$inventory = $this->inventories->Add( $input[ 'title' ] );
+		$inventory = $this->inventories->Add( $input[ 'title' ], $input[ 'comment' ] ?? '' );
 		if ( !$inventory ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи' ) ] );
 		}
@@ -31,7 +31,7 @@ class InventoriesController extends Controller {
 	public function update( Inventory $inventory, InventoryRequest $request ) : RedirectResponse {
 		$input = $request->validated( );
 		
-		if ( !$this->inventories->Update( $inventory, $input[ 'title' ] ) ) {
+		if ( !$this->inventories->Update( $inventory, $input[ 'title' ], $input[ 'comment' ] ?? '' ) ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи' ) ] );
 		}
 		
