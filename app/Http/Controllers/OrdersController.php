@@ -54,10 +54,10 @@ class OrdersController extends Controller {
 			foreach( $input[ 'inventories' ] as $row ) {
 				if ( $row[ 'id' ] ) {
 					if ( $inventory = $order->inventories->find( $row[ 'id' ] ) ) {
-						$this->orders->InventoryUpdate( $order, $inventory, $row[ 'comment' ] );
+						$this->orders->InventoryUpdate( $order, $inventory, $row[ 'comment' ] ?? '' );
 					}
 				} else {
-					$this->orders->InventoryAdd( $order, $inventories->Find( $row[ 'inventory_id' ] ), $row[ 'comment' ] );
+					$this->orders->InventoryAdd( $order, $inventories->Find( $row[ 'inventory_id' ] ), $row[ 'comment' ] ?? '' );
 				}
 			}
 		}
@@ -65,10 +65,10 @@ class OrdersController extends Controller {
 			foreach( $input[ 'payments' ] as $row ) {
 				if ( $row[ 'id' ] ) {
 					if ( $payment = $order->payments->find( $row[ 'id' ] ) ) {
-						$this->orders->PaymentUpdate( $payment, $row[ 'amount' ], $row[ 'comment' ] );
+						$this->orders->PaymentUpdate( $payment, $row[ 'amount' ], $row[ 'comment' ] ?? '' );
 					}
 				} else {
-					$this->orders->PaymentAdd( $order, $row[ 'amount' ], $row[ 'comment' ] );
+					$this->orders->PaymentAdd( $order, $row[ 'amount' ], $row[ 'comment' ] ?? '' );
 				}
 			}
 		}

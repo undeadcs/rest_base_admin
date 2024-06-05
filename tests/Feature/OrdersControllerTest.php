@@ -214,10 +214,11 @@ class OrdersControllerTest extends TestCase {
 		$this->from( $url )->put( $url, $data )->assertRedirect( '/orders' );
 	}
 	
-	public function test_updating_payment_add( ) : void {
+	#[ DataProvider( 'commentProvider' ) ]
+	public function test_updating_payment_add( string $comment ) : void {
 		$order = Order::factory( )->create( );
 		$updateOrder = Order::factory( )->make( );
-		$payment = Payment::factory( )->state( [ 'order_id' => null ] )->make( );
+		$payment = Payment::factory( )->state( [ 'order_id' => null ] )->make( [ 'comment' => $comment ] );
 		$data = [
 			'apartment_id'	=> $order->apartment->id,
 			'customer_id'	=> $order->customer->id,
@@ -263,11 +264,12 @@ class OrdersControllerTest extends TestCase {
 		$this->from( $url )->put( $url, $data )->assertRedirect( '/orders' );
 	}
 	
-	public function test_updating_payment_update( ) : void {
+	#[ DataProvider( 'commentProvider' ) ]
+	public function test_updating_payment_update( string $comment ) : void {
 		$order = Order::factory( )->hasPayments( 1 )->create( );
 		$payment = $order->payments->first( );
 		$updateOrder = Order::factory( )->make( );
-		$updatePayment = Payment::factory( )->state( [ 'order_id' => null ] )->make( );
+		$updatePayment = Payment::factory( )->state( [ 'order_id' => null ] )->make( [ 'comment' => $comment ] );
 		$data = [
 			'apartment_id'	=> $order->apartment->id,
 			'customer_id'	=> $order->customer->id,
@@ -313,11 +315,11 @@ class OrdersControllerTest extends TestCase {
 		$this->from( $url )->put( $url, $data )->assertRedirect( '/orders' );
 	}
 	
-	public function test_updating_inventory_add( ) : void {
+	#[ DataProvider( 'commentProvider' ) ]
+	public function test_updating_inventory_add( string $comment ) : void {
 		$order = Order::factory( )->create( );
 		$updateOrder = Order::factory( )->make( );
 		$inventory = Inventory::factory( )->create( );
-		$inventoryComment = $this->faker->text( );
 		$data = [
 			'apartment_id'	=> $order->apartment->id,
 			'customer_id'	=> $order->customer->id,
@@ -333,7 +335,7 @@ class OrdersControllerTest extends TestCase {
 			'inventories'	=> [ [
 				'id'			=> 0,
 				'inventory_id'	=> $inventory->id,
-				'comment'		=> $inventoryComment
+				'comment'		=> $comment
 			] ]
 		];
 		
@@ -342,7 +344,7 @@ class OrdersControllerTest extends TestCase {
 		
 		$this->instance( OrderRepository::class, \Mockery::mock(
 			OrderRepository::class,
-			function( MockInterface $mock ) use ( $order, $updateOrder, $inventory, $inventoryComment ) {
+			function( MockInterface $mock ) use ( $order, $updateOrder, $inventory, $comment ) {
 				$mock->shouldReceive( 'Update' )
 					->with(
 						$this->OrderArgument( $order ), $this->CustomerArgument( $order->customer ), $this->ApartmentArgument( $order->apartment ),
@@ -353,7 +355,7 @@ class OrdersControllerTest extends TestCase {
 					->andReturn( true );
 				
 				$mock->shouldReceive( 'InventoryAdd' )
-					->with( $this->OrderArgument( $order ), $this->InventoryArgument( $inventory ), $inventoryComment )
+					->with( $this->OrderArgument( $order ), $this->InventoryArgument( $inventory ), $comment )
 					->once( )
 					->andReturn( true );
 			}
@@ -363,11 +365,11 @@ class OrdersControllerTest extends TestCase {
 		$this->from( $url )->put( $url, $data )->assertRedirect( '/orders' );
 	}
 	
-	public function test_updating_inventory_update( ) : void {
+	#[ DataProvider( 'commentProvider' ) ]
+	public function test_updating_inventory_update( string $comment ) : void {
 		$order = Order::factory( )->hasAttached( Inventory::factory( )->count( 1 ), fn( ) => [ 'comment' => fake( )->text( ) ] )->create( );
 		$updateOrder = Order::factory( )->make( );
 		$inventory = $order->inventories->first( );
-		$inventoryComment = $this->faker->text( );
 		$data = [
 			'apartment_id'	=> $order->apartment->id,
 			'customer_id'	=> $order->customer->id,
@@ -382,7 +384,7 @@ class OrdersControllerTest extends TestCase {
 			'to_minute'		=> $updateOrder->to->format( 'i' ),
 			'inventories' => [ [
 				'id'		=> $inventory->id,
-				'comment'	=> $inventoryComment
+				'comment'	=> $comment
 			] ]
 		];
 		
@@ -391,7 +393,7 @@ class OrdersControllerTest extends TestCase {
 		
 		$this->instance( OrderRepository::class, \Mockery::mock(
 			OrderRepository::class,
-			function( MockInterface $mock ) use ( $order, $updateOrder, $inventory, $inventoryComment ) {
+			function( MockInterface $mock ) use ( $order, $updateOrder, $inventory, $comment ) {
 				$mock->shouldReceive( 'Update' )
 					->with(
 						$this->OrderArgument( $order ), $this->CustomerArgument( $order->customer ), $this->ApartmentArgument( $order->apartment ),
@@ -402,7 +404,7 @@ class OrdersControllerTest extends TestCase {
 					->andReturn( true );
 				
 				$mock->shouldReceive( 'InventoryUpdate' )
-					->with( $this->OrderArgument( $order ), $this->InventoryArgument( $inventory ), $inventoryComment )
+					->with( $this->OrderArgument( $order ), $this->InventoryArgument( $inventory ), $comment )
 					->once( )
 					->andReturn( true );
 			}
