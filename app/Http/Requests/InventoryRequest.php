@@ -19,8 +19,9 @@ class InventoryRequest extends FormRequest {
 	 */
 	public function rules( ) : array {
 		return [
-			'title'	=> [ 'required', 'min:1', 'max:255' ],
-			'price'	=> [ 'required', 'numeric' ]
+			'title'		=> [ 'required', 'min:1', 'max:255' ],
+			'price'		=> [ 'required', 'numeric' ],
+			'comment'	=> [ 'string', 'max:3000' ]
 		];
 	}
 }
