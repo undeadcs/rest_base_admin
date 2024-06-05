@@ -22,7 +22,7 @@ class CustomerRequest extends FormRequest {
 			'name'			=> [ 'required', 'min:1', 'max:255' ],
 			'phone_number'	=> [ 'required', 'max:255' ],
 			'car_number'	=> [ 'string', 'max:255' ],
-			'comment'		=> [ 'string', 'max:3000' ]
+			'comment'		=> [ 'nullable', 'max:3000' ]
 		];
 	}
 }

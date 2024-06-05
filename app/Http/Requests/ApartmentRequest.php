@@ -27,7 +27,7 @@ class ApartmentRequest extends FormRequest {
 			'number'	=> [ 'required', 'numeric' ],
 			'capacity'	=> [ 'required', 'numeric' ],
 			'price'		=> [ 'required', 'numeric' ],
-			'comment'	=> [ 'string', 'max:3000' ]
+			'comment'	=> [ 'nullable', 'max:3000' ]
 		];
 	}
 }

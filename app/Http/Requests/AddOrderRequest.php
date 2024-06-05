@@ -24,7 +24,7 @@ class AddOrderRequest extends FormRequest {
 			'from'			=> [ 'required', 'date' ],
 			'to'			=> [ 'required', 'date' ],
 			'persons_number' => [ 'required', 'numeric' ],
-			'comment'		=> [ 'string', 'max:3000' ],
+			'comment'		=> [ 'nullable', 'max:3000' ],
 			'from_hour'		=> [ 'required', 'numeric', 'min:0', 'max:23' ],
 			'from_minute'	=> [ 'required', 'numeric', 'min:0', 'max:59' ],
 			'to_hour'		=> [ 'required', 'numeric', 'min:0', 'max:23' ],

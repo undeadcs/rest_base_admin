@@ -21,7 +21,7 @@ class InventoryRequest extends FormRequest {
 		return [
 			'title'		=> [ 'required', 'min:1', 'max:255' ],
 			'price'		=> [ 'required', 'numeric' ],
-			'comment'	=> [ 'string', 'max:3000' ]
+			'comment'	=> [ 'max:3000' ]
 		];
 	}
 }
