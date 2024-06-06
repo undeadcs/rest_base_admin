@@ -31,4 +31,23 @@ class AddOrderRequest extends FormRequest {
 			'to_minute'		=> [ 'required', 'numeric', 'min:0', 'max:59' ]
 		];
 	}
+	
+	/**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+	public function messages( ) : array {
+		return [
+			'apartment_id'			=> __( 'Нужно указать апартаменты' ),
+			'customer_id'			=> __( 'Нужно указать клиента' ),
+			'from.required'			=> __( 'Нужно указать дату начала' ),
+			'to.required'			=> __( 'Нужно указать дату окончания' ),
+			'persons_number.required' => __( 'Нужно указать число персон' ),
+			'from_hour.required'	=> __( 'Нужно указать час (дата начала)' ),
+			'from_minute.required'	=> __( 'Нужно указать минуты (дата начала)' ),
+			'to_hour.required'		=> __( 'Нужно указать час (дата окончания)' ),
+			'to_minute.required'	=> __( 'Нужно указать минуты (дата окончания)' )
+		];
+	}
 }

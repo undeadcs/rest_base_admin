@@ -4,7 +4,7 @@
 @method( 'PUT' )
 <input type="hidden" name="id" value="{{ $order->id }}"/>
 @endif
-<input id="customer_id" type="hidden" name="customer_id" value="{{ ( int ) $order->customer_id }}"/>
+<input id="customer_id" type="hidden" name="customer_id" value="{{ $order->customer_id }}"/>
 @if ( $order->id )
 <div class="mb-3">
 	<label for="status" class="form-label">{{ __( 'Статус' ) }}</label>

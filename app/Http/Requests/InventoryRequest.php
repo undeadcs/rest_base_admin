@@ -24,4 +24,16 @@ class InventoryRequest extends FormRequest {
 			'comment'	=> [ 'max:3000' ]
 		];
 	}
+	
+	/**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+	public function messages( ) : array {
+		return [
+			'title.required'	=> __( 'Нужно указать наименование' ),
+			'price.required'	=> __( 'Нужно указать цену' )
+		];
+	}
 }

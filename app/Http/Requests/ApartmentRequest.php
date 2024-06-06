@@ -30,4 +30,19 @@ class ApartmentRequest extends FormRequest {
 			'comment'	=> [ 'nullable', 'max:3000' ]
 		];
 	}
+	
+	/**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+	public function messages( ) : array {
+		return [
+			'title.required'	=> __( 'Нужно указать наименование' ),
+			'type'				=> __( 'Ошибка в указании типа' ),
+			'number.required'	=> __( 'Нужно указать номер (отличный от нуля)' ),
+			'capacity.required'	=> __( 'Нужно указать вместимость (отличную от нуля)' ),
+			'price.required'	=> __( 'Нужно указать цену' )
+		];
+	}
 }
