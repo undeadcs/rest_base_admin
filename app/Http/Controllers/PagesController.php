@@ -23,11 +23,11 @@ class PagesController extends Controller {
 		$from = Date::createFromFormat( 'd.m.Y', $request->get( 'f', today( )->format( 'd.m.Y' ) ) )->setTime( 0, 0 );
 		$to = Date::createFromFormat( 'd.m.Y', $request->get( 't', today( )->modify( '+6 days' )->format( 'd.m.Y' ) ) )->setTime( 23, 59, 59 );
 		
-		$houses = $apartments->GetHouses( );
+		$currentApartments = $apartments->GetHouses( );
 		
 		$orderIndex = [ ];
 		
-		$houses->each( function( Apartment $apartment ) use( &$orderIndex, $apartments, $from, $to ) {
+		$currentApartments->each( function( Apartment $apartment ) use( &$orderIndex, $apartments, $from, $to ) {
 			$paginator = $apartments->ListOrdersByPeriod( $apartment, $from, $to );
 			
 			if ( $paginator->total( ) ) {
@@ -50,10 +50,10 @@ class PagesController extends Controller {
 		}
 		
 		return view( 'components.pages.'.TopPage::Main->value, [
-			'top_nav_items' => $this->topNavBar->items( ),
-			'apartments' => $houses,
-			'days' => $days,
-			'orderIndex' => $orderIndex
+			'top_nav_items'	=> $this->topNavBar->items( ),
+			'apartments'	=> $currentApartments,
+			'days'			=> $days,
+			'orderIndex'	=> $orderIndex
 		] );
 	}
 }

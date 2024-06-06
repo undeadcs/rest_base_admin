@@ -39,7 +39,7 @@
 			@if ( $loop->first ) {{ __( 'по' ).' '.$order->to->format( 'H:i' ) }} @else {{ __( 'с' ).' '.$order->from->format( 'H:i' ) }} @endif
 		@endif
 		@if ( !$loop->last ) <br/> @endif
-		@if ( $loop->last && ( $nextOrderTime = $TimeLeftForOrder( $order, $day ) ) )
+		@if ( $loop->last && ( $nextOrderTime = $TimeLeftForOrder( $order, $day, $apartment ) ) )
 			<br/>
 			<a class="btn btn-primary" href="{{ url( '/orders' ) }}/add?from={{ $day->format( 'Ymd' ).$nextOrderTime->format( 'Hi' ) }}&amp;apartment_id={{ $apartment->id }}">{{ __( 'Свободно c' ).' '.$nextOrderTime->format( 'H:i' ) }}</a>
 		@endif

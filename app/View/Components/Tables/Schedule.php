@@ -15,15 +15,16 @@ class Schedule extends Component {
 	public Collection $apartments;
 	public BaseCollection $days;
 	public array $orderIndex;
-	public int $lowestHourForOrder = 20;
+	public int $lowestHourForOrder;
 	
 	/**
 	 * Create a new component instance.
 	 */
-	public function __construct( Collection $apartments, BaseCollection $days, array $orderIndex ) {
-		$this->apartments = $apartments;
-		$this->days = $days;
-		$this->orderIndex = $orderIndex;
+	public function __construct( Collection $apartments, BaseCollection $days, array $orderIndex, int $lowestHourForOrder = 14 ) {
+		$this->apartments			= $apartments;
+		$this->days					= $days;
+		$this->orderIndex			= $orderIndex;
+		$this->lowestHourForOrder	= $lowestHourForOrder;
 	}
 
 	/**
@@ -41,8 +42,16 @@ class Schedule extends Component {
 		return isset( $this->orderIndex[ $apartment->id ][ $day->format( 'Y-m-d' ) ] );
 	}
 	
-	public function TimeLeftForOrder( Order $order, Carbon $day ) : ?Carbon {
-		if ( $order->to->format( 'Ymd' ) != $day->format( 'Ymd' ) ) {
+	public function TimeLeftForOrder( Order $order, Carbon $day, Apartment $apartment ) : ?Carbon {
+		$dayStr = $day->format( 'Ymd' );
+		
+		if ( $order->to->format( 'Ymd' ) != $dayStr ) {
+			return null;
+		}
+		
+		$nextDay = ( clone $order->to )->modify( '+1 day' );
+		
+		if ( isset( $this->orderIndex[ $apartment->id ][ $nextDay->format( 'Y-m-d' ) ] ) ) {
 			return null;
 		}
 		
