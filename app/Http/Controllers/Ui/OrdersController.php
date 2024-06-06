@@ -15,6 +15,7 @@ use App\Enums\OrderStatus;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Repositories\CustomerRepository;
 
 class OrdersController extends Controller {
 	protected TopNavBar $topNavBar;
@@ -30,7 +31,29 @@ class OrdersController extends Controller {
 		] );
 	}
 	
-	public function add( Request $request, ApartmentRepository $apartments ) : View {
+	protected function ResloveApartmentId( Request $request ) : int {
+		if ( $request->exists( 'apartment_id' ) ) {
+			return ( int ) $request->get( 'apartment_id' );
+		}
+		if ( $request->hasSession( ) && ( $apartmentId = $request->session( )->getOldInput( 'apartment_id' ) ) ) {
+			return ( int ) $apartmentId;
+		}
+		
+		return 0;
+	}
+	
+	protected function ResolveCustomerId( Request $request ) : int {
+		if ( $request->exists( 'customer_id' ) ) {
+			return ( int ) $request->get( 'customer_id' );
+		}
+		if ( $request->hasSession( ) && ( $apartmentId = $request->session( )->getOldInput( 'customer_id' ) ) ) {
+			return ( int ) $apartmentId;
+		}
+		
+		return 0;
+	}
+	
+	public function add( Request $request, ApartmentRepository $apartments, CustomerRepository $customers ) : View {
 		$order = new Order;
 		$order->from = now( )->setTime( 0, 0, 0 );
 		$order->to = now( )->modify( '+1 week' )->setTime( 0, 0, 0 );
@@ -43,9 +66,16 @@ class OrdersController extends Controller {
 			catch( InvalidFormatException $e ) {
 			}
 		}
-		if ( $request->has( 'apartment_id' ) ) {
+		if ( $apartmentId = $this->ResloveApartmentId( $request ) ) {
 			try {
-				$order->apartment( )->associate( $apartments->Find( ( int ) $request->input( 'apartment_id' ) ) );
+				$order->apartment( )->associate( $apartments->Find( $apartmentId ) );
+			}
+			catch( ModelNotFoundException $e ) {
+			}
+		}
+		if ( $customerId = $this->ResolveCustomerId( $request ) ) {
+			try {
+				$order->customer( )->associate( $customers->Find( $customerId ) );
 			}
 			catch( ModelNotFoundException $e ) {
 			}
