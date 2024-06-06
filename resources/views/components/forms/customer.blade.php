@@ -24,7 +24,7 @@
 <input class="btn btn-primary" type="submit" value="{{ __( 'Сохранить' ) }}"/>
 <a class="btn btn-danger" href="{{ url( '/customers' ) }}">{{ __( 'Отмена' ) }}</a>
 </form>
-@if ( $orders )
+@if ( $orders && $orders->isNotEmpty( ) )
 <h2>{{ __( 'Заявки' ) }}</h2>
 <x-lists.orders :paginator="$orders" :hide-customer="true"/>
 @endif

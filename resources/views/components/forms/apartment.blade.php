@@ -51,7 +51,7 @@
 @endforeach
 </tbody></table>
 @endif
-@if ( $orders )
+@if ( $orders && $orders->isNotEmpty( ) )
 <h2>{{ __( 'Заявки' ) }}</h2>
 <x-lists.orders :paginator="$orders" :hide-apartment="true"/>
 @endif
