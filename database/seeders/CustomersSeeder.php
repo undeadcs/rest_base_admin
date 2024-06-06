@@ -13,6 +13,6 @@ class CustomersSeeder extends Seeder {
 	 * Run the database seeds.
 	 */
 	public function run( ) : void {
-		Customer::factory( )->count( 300 )->create( );
+		Customer::factory( )->count( 30 )->create( );
 	}
 }
