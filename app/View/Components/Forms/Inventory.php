@@ -6,15 +6,18 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\Inventory as InventoryModel;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class Inventory extends Component {
 	public InventoryModel $inventory;
+	public ?LengthAwarePaginator $orders;
 	
 	/**
 	 * Create a new component instance.
 	 */
-	public function __construct( InventoryModel $inventory ) {
+	public function __construct( InventoryModel $inventory, ?LengthAwarePaginator $orders = null ) {
 		$this->inventory = $inventory;
+		$this->orders = $orders;
 	}
 
 	/**

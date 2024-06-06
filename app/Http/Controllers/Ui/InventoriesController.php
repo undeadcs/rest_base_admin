@@ -28,7 +28,11 @@ class InventoriesController extends Controller {
 		return view( 'components.pages.inventory-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'inventory' => new Inventory ] );
 	}
 	
-	public function edit( Inventory $inventory ) : View {
-		return view( 'components.pages.inventory-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'inventory' => $inventory ] );
+	public function edit( Inventory $inventory, Request $request, InventoryRepository $inventories ) : View {
+		return view( 'components.pages.inventory-form', [
+			'top_nav_items'	=> $this->topNavBar->items( ),
+			'inventory'		=> $inventory,
+			'orders'		=> $inventories->ListOrdersWithApartment( $inventory, ( int ) $request->input( 'page' ) )
+		] );
 	}
 }

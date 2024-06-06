@@ -33,3 +33,7 @@
 @endforeach
 </table>
 @endif
+@if ( $orders && $orders->isNotEmpty( ) )
+<h2>{{ __( 'Заявки' ) }}</h2>
+<x-lists.orders :paginator="$orders"/>
+@endif

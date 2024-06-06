@@ -16,6 +16,14 @@ class DatabaseInventoryRepository implements InventoryRepository {
 		return $inventory->orders( )->orderBy( 'id', 'desc' )->paginate( $pageSize, [ '*' ], 'page', $page );
 	}
 	
+	public function ListOrdersWithApartment( Inventory $inventory, int $page = 1, int $pageSize = 25 ) : LengthAwarePaginator {
+		return $inventory->orders( )
+			->with( 'apartment' )
+			->with( 'apartmentPrice' )
+			->orderBy( 'id', 'desc' )
+			->paginate( $pageSize, [ '*' ], 'page', $page );
+	}
+	
 	public function GetAll( ) : Collection {
 		return Inventory::orderBy( 'title', 'asc' )->with( 'currentPrice' )->get( );
 	}
@@ -36,7 +44,7 @@ class DatabaseInventoryRepository implements InventoryRepository {
 		return $inventory->save( ) ? $inventory : null;
 	}
 	
-	public function Update( Inventory $apartment, string $title, string $comment ) : bool {
+	public function Update( Inventory $inventory, string $title, string $comment ) : bool {
 		$update = false;
 		
 		if ( $apartment->title != $title ) {
