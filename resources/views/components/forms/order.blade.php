@@ -19,7 +19,7 @@
 	<label class="form-label" for="apartment_id">{{ __( 'Апартаменты' ) }}</label>
 	<select id="apartment_id" class="form-select" name="apartment_id" @if ( !$order->id ) autofocus="autofocus"@endif>
 		@foreach( $apartments as $apartment )
-		<option value="{{ $apartment->id }}"@if ( $apartment->id == $order->apartment_id ) selected="selected" @endif>{{ $apartment->title }}</option>
+		<option value="{{ $apartment->id }}"@if ( $apartment->id == $order->apartment_id || $apartment->id === old( 'apartment_id' ) ) selected="selected" @endif>{{ $apartment->title }}</option>
 		@endforeach
 	</select>
 </div>
@@ -81,11 +81,11 @@
 </div>
 <div class="mb-3">
 	<label class="form-label" for="persons_number">{{ __( 'Количество человек' ) }}</label>
-	<input id="persons_number" class="form-control" type="text" name="persons_number" value="{{ $order->persons_number }}"/>
+	<input id="persons_number" class="form-control" type="text" name="persons_number" value="{{ $order->persons_number ?? old( 'persons_number' ) }}"/>
 </div>
 <div class="mb-3">
 	<label class="form-label" for="comment">{{ __( 'Комментарий' ) }}</label>
-	<textarea id="comment" class="form-control" rows="4" name="comment">{{ $order->comment }}</textarea>
+	<textarea id="comment" class="form-control" rows="4" name="comment">{{ $order->comment ?? old( 'comment' ) }}</textarea>
 	<div class="form-text">{{ __( 'Сюда стоит записывать всякие детали заказа. Желательно разные категории информации разделять, чтобы в дальнейшем их можно было проанализировать и добавить что-нибудь новое' ) }}</div>
 </div>
 @if ( $order->id )
