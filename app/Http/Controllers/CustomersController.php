@@ -17,7 +17,7 @@ class CustomersController extends Controller {
 	public function add( CustomerRequest $request ) : RedirectResponse {
 		$input = $request->validated( );
 		
-		if ( !$this->customers->Add( $input[ 'name' ], $input[ 'phone_number' ], $input[ 'car_number' ], $input[ 'comment' ] ?? '' ) ) {
+		if ( !$this->customers->Add( $input[ 'name' ], $input[ 'phone_number' ], $input[ 'car_number' ] ?? '', $input[ 'comment' ] ?? '' ) ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи' ) ] );
 		}
 		
@@ -27,7 +27,7 @@ class CustomersController extends Controller {
 	public function update( Customer $customer, CustomerRequest $request ) : RedirectResponse {
 		$input = $request->validated( );
 		
-		if ( !$this->customers->Update( $customer, $input[ 'name' ], $input[ 'phone_number' ], $input[ 'car_number' ], $input[ 'comment' ] ?? '' ) ) {
+		if ( !$this->customers->Update( $customer, $input[ 'name' ], $input[ 'phone_number' ], $input[ 'car_number' ] ?? '', $input[ 'comment' ] ?? '' ) ) {
 			return redirect( )->back( )->withErrors( [ 'msg' => __( 'Провалилось сохранение записи' ) ] );
 		}
 		

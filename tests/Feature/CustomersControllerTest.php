@@ -36,14 +36,14 @@ class CustomersControllerTest extends TestCase {
 	
 	public static function commentProvider( ) : array {
 		return [
-			'comment_filled' => [ fake( )->text( ) ],
-			'comment_empty' => [ '' ]
+			'car_and_comment_filled' => [ fake( )->text( ), fake( )->regexify( '[0-9A-Z]{6}' ) ],
+			'car_and_comment_empty' => [ '', '' ]
 		];
 	}
 	
 	#[ DataProvider( 'commentProvider' ) ]
-	public function test_add_success( string $comment ) : void {
-		$customer = Customer::factory( )->create( [ 'comment' => $comment ] );
+	public function test_add_success( string $comment, string $carNumber ) : void {
+		$customer = Customer::factory( )->create( [ 'car_number' => $carNumber, 'comment' => $comment ] );
 		$data = [
 			'name'			=> $customer->name,
 			'phone_number'	=> $customer->phone_number,
@@ -86,9 +86,9 @@ class CustomersControllerTest extends TestCase {
 	}
 	
 	#[ DataProvider( 'commentProvider' ) ]
-	public function test_update_success( string $comment ) : void {
+	public function test_update_success( string $comment, string $carNumber ) : void {
 		$customer = Customer::factory( )->create( );
-		$updateCustomer = Customer::factory( )->make( [ 'comment' => $comment ] );
+		$updateCustomer = Customer::factory( )->make( [ 'car_number' => $carNumber, 'comment' => $comment ] );
 		$data = [
 			'name'			=> $updateCustomer->name,
 			'phone_number'	=> $updateCustomer->phone_number,
