@@ -9,7 +9,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class Pagination extends Component {
 	public LengthAwarePaginator $paginator;
-	public $pagesPerFrame;
+	public int $pagesPerFrame;
 	
 	/**
 	 * Create a new component instance.
