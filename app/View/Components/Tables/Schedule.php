@@ -10,20 +10,28 @@ use App\Models\Order;
 use App\Models\Apartment;
 use Carbon\Carbon;
 use Illuminate\Support\Collection as BaseCollection;
+use App\Enums\ApartmentType;
 
 class Schedule extends Component {
 	public Collection $apartments;
 	public BaseCollection $days;
 	public array $orderIndex;
+	public array $apartmentTypeItems;
+	public ApartmentType $currentApartmentType;
 	public int $lowestHourForOrder;
 	
 	/**
 	 * Create a new component instance.
 	 */
-	public function __construct( Collection $apartments, BaseCollection $days, array $orderIndex, int $lowestHourForOrder = 14 ) {
+	public function __construct(
+		Collection $apartments, BaseCollection $days, array $orderIndex, array $apartmentTypeItems, ApartmentType $currentApartmentType,
+		int $lowestHourForOrder = 14
+	) {
 		$this->apartments			= $apartments;
 		$this->days					= $days;
 		$this->orderIndex			= $orderIndex;
+		$this->apartmentTypeItems	= $apartmentTypeItems;
+		$this->currentApartmentType	= $currentApartmentType;
 		$this->lowestHourForOrder	= $lowestHourForOrder;
 	}
 

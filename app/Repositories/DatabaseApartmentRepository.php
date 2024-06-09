@@ -27,6 +27,13 @@ class DatabaseApartmentRepository implements ApartmentRepository {
 			->get( );
 	}
 	
+	public function GetTents( ) : Collection {
+		return Apartment::orderBy( 'id', 'asc' )
+			->where( 'type', ApartmentType::TentPlace )
+			->with( 'currentPrice' )
+			->get( );
+	}
+	
 	public function Find( int $id ) : Apartment {
 		return Apartment::findOrFail( $id );
 	}

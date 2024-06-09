@@ -8,17 +8,28 @@
 	<script src="{{ asset( 'js/jquery-ui.js' ) }}"></script>
 	<script src="{{ asset( 'js/jquery-datepicker-localization.js' ) }}"></script>
 </x-slot>
-<form id="week-from-form" class="row mb-3" action="/" method="get" autocomplete="off"><div class="col-2"><div class="input-group">
+<form id="week-from-form" action="/" method="get" autocomplete="off"><div class="btn-toolbar mb-3">
+<input type="hidden" name="a" value="{{ $currentApartmentType->value }}"/>
+<div class="btn-group me-2">
+@foreach( $apartmentTypeItems as $item )
+	<a @class( [ 'btn', 'btn-outline-primary', 'active' => $item->current ] ) href="{!! $item->url !!}">{{ $item->title }}</a>
+@endforeach
+</div>
+<div class="input-group me-2">
 	<div class="input-group-text">{{ __( 'с' ) }}</div>
 	<input id="from" class="form-control" type="text" name="f" value="{{ $days->first( )->format( 'd.m.Y' ) }}"/>
-</div></div><div class="col-2"><div class="input-group">
+</div>
+<div class="input-group me-2">
 	<div class="input-group-text">{{ __( 'по' ) }}</div>
 	<input id="to" class="form-control" type="text" name="t" value="{{ $days->last( )->format( 'd.m.Y' ) }}"/>
-</div></div><div class="col">
+</div>
+<div class="input-group">
 	<input class="btn btn-primary" type="submit" value="{{ __( 'применить' ) }}"/>
 	<a class="btn btn-secondary" href="/">{{ __( 'сброс' ) }}</a>
+</div>
 </div></form>
-<div class=""><table class="table align-middle"><thead><tr>
+
+<table class="table align-middle"><thead><tr>
 	<th class="col-1" style="min-width: 150px;">&nbsp;</th>
 	@foreach( $days as $day )
 	<th>{{ $day->format( 'd.m.Y' ) }}</th>
@@ -51,7 +62,7 @@
 	@endforeach
 </tr>
 @endforeach
-</tbody></table></div>
+</tbody></table>
 <script>
 $( '#from' ).datepicker( {
 	dateFormat: 'dd.mm.yy',
