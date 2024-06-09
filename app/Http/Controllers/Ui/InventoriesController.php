@@ -8,29 +8,29 @@ use App\Repositories\InventoryRepository;
 use Illuminate\View\View;
 use App\Enums\TopPage;
 use App\Models\Inventory;
-use App\Services\TopNavBar;
+use App\Services\Navigation;
 
 class InventoriesController extends Controller {
-	protected TopNavBar $topNavBar;
+	protected Navigation $navigation;
 	
-	public function __construct( TopNavBar $topNavBar ) {
-		$this->topNavBar = $topNavBar;
+	public function __construct( Navigation $navigation ) {
+		$this->navigation = $navigation;
 	}
 	
 	public function index( Request $request, InventoryRepository $inventories ) : View {
 		return view( 'components.pages.'.TopPage::Inventories->value, [
-			'top_nav_items'	=> $this->topNavBar->items( ),
+			'top_nav_items'	=> $this->navigation->items( TopPage::Inventories ),
 			'paginator'		=> $inventories->List( ( int ) $request->input( 'page' ), 17 )
 		] );
 	}
 	
 	public function add( ) : View {
-		return view( 'components.pages.inventory-form', [ 'top_nav_items' => $this->topNavBar->items( ), 'inventory' => new Inventory ] );
+		return view( 'components.pages.inventory-form', [ 'top_nav_items' => $this->navigation->items( TopPage::Inventories ), 'inventory' => new Inventory ] );
 	}
 	
 	public function edit( Inventory $inventory, Request $request, InventoryRepository $inventories ) : View {
 		return view( 'components.pages.inventory-form', [
-			'top_nav_items'	=> $this->topNavBar->items( ),
+			'top_nav_items'	=> $this->navigation->items( TopPage::Inventories ),
 			'inventory'		=> $inventory,
 			'orders'		=> $inventories->ListOrdersWithApartment( $inventory, ( int ) $request->input( 'page' ) )
 		] );

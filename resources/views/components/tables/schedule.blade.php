@@ -29,7 +29,7 @@
 	<td class="table-secondary"><a href="{{ url( '/apartments' ) }}/{{ $apartment->id }}">{{ $apartment->title }}</a></td>
 	@foreach( $days as $day )
 	@if ( $HasOrdersAtDay( $apartment, $day ) )
-		<td>
+	<td>
 		@foreach( $orderIndex[ $apartment->id ][ $day->format( 'Y-m-d' ) ] as $order )
 		<a href="{{ url( '/orders' ) }}/{{ $order->id }}">{{ __( 'заявка' ) }}</a><br/>
 		<a href="{{ url( '/customers' ) }}/{{ $order->customer->id }}">{{ $ShortCustomerName( $order->customer->name ) }}</a><br/>
@@ -44,9 +44,9 @@
 			<a class="btn btn-primary" href="{{ url( '/orders' ) }}/add?from={{ $day->format( 'Ymd' ).$nextOrderTime->format( 'Hi' ) }}&amp;apartment_id={{ $apartment->id }}">{{ __( 'Свободно c' ).' '.$nextOrderTime->format( 'H:i' ) }}</a>
 		@endif
 		@endforeach
-		</td>
+	</td>
 	@else
-		<td class="table-success"><a class="btn btn-primary" href="{{ url( '/orders' ) }}/add?from={{ $day->format( 'Ymd' ) }}&amp;apartment_id={{ $apartment->id }}">{{ __( 'Свободно' ) }}</a></td>
+	<td class="table-success"><a class="btn btn-primary" href="{{ url( '/orders' ) }}/add?from={{ $day->format( 'Ymd' ) }}&amp;apartment_id={{ $apartment->id }}">{{ __( 'Свободно' ) }}</a></td>
 	@endif
 	@endforeach
 </tr>

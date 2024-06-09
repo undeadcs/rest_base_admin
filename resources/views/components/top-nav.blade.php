@@ -1,5 +1,5 @@
-<nav class="nav justify-content-center">
+<ul class="nav nav-tabs mb-3">
 @foreach( $items as $item )
-<a class="nav-link" href="{{ $item->url }}">{{ $item->title }}</a>
+<li class="nav-item"><a @class([ 'nav-link', 'active' => isset( $item->current ) ]) href="{{ $item->url }}">{{ $item->title }}</a></li>
 @endforeach
-</nav>
+</ul>

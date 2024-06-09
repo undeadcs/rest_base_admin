@@ -6,7 +6,7 @@ use App\Enums\TopPage;
 /**
  * Сервис для рендеринга навигации в верхей части страниц
  */
-class TopNavBar {
+class Navigation {
 	public static function TopPageTitle( TopPage $page ) : string {
 		return match( $page ) {
 			TopPage::Main			=> __( 'Календарь' ),
@@ -21,14 +21,20 @@ class TopNavBar {
 		return route( 'page_'.$page->value );
 	}
 	
-	public function items( ) : array {
+	public function items( TopPage $currentPage ) : array {
 		$items = [ ];
 		
 		foreach( TopPage::cases( ) as $page ) {
-			$items[ ] = ( object ) [
+			$row = [
 				'url' => self::TopPageUrl( $page ),
 				'title' => self::TopPageTitle( $page )
 			];
+			
+			if ( $page == $currentPage ) {
+				$row[ 'current' ] = true;
+			}
+			
+			$items[ ] = ( object ) $row;
 		}
 		
 		return $items;

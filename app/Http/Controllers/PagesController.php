@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\View\View;
 use App\Enums\TopPage;
-use App\Services\TopNavBar;
+use App\Services\Navigation;
 use App\Repositories\ApartmentRepository;
 use Illuminate\Http\Request;
 use App\Models\Apartment;
@@ -13,10 +13,10 @@ use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Collection;
 
 class PagesController extends Controller {
-	protected TopNavBar $topNavBar;
+	protected Navigation $navigation;
 	
-	public function __construct( TopNavBar $topNavBar ) {
-		$this->topNavBar = $topNavBar;
+	public function __construct( Navigation $navigation ) {
+		$this->navigation = $navigation;
 	}
 	
 	public function main( Request $request, ApartmentRepository $apartments ) : View {
@@ -50,7 +50,7 @@ class PagesController extends Controller {
 		}
 		
 		return view( 'components.pages.'.TopPage::Main->value, [
-			'top_nav_items'	=> $this->topNavBar->items( ),
+			'top_nav_items'	=> $this->navigation->items( TopPage::Main ),
 			'apartments'	=> $currentApartments,
 			'days'			=> $days,
 			'orderIndex'	=> $orderIndex
