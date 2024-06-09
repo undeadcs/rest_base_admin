@@ -7,6 +7,6 @@
 	{{ $styles ?? '' }}
 	<script src="{{ asset( 'js/bootstrap.js' ) }}"></script>
 	{{ $scripts ?? '' }}
-</head><body>
+</head><body><div class="container-fluid p-3">
 {{ $slot }}
-</body></html>
+</div></body></html>

@@ -1,4 +1,4 @@
-<x-layout><div class="container">
+<x-layout>
 	<x-top-nav :items="$top_nav_items"/>
 	<h1>@if ( $inventory->id ) {{ __( 'Изменение данных инвентаря' ) }} @else {{ __( 'Добавление инвентаря' ) }} @endif</h1>
 	<x-errors/>
@@ -7,4 +7,4 @@
 	@else
 	<x-forms.inventory :inventory="$inventory"/>
 	@endif
-</div></x-layout>
+</x-layout>

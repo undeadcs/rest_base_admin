@@ -1,4 +1,4 @@
-<x-layout><div class="container">
+<x-layout>
 	<x-slot:styles>
 		<link rel="stylesheet" href="{{ asset( 'css/jquery-ui.css' ) }}"/>
 		<link rel="stylesheet" href="{{ asset( 'css/jquery-ui.theme.css' ) }}"/>
@@ -16,4 +16,4 @@
 	@else
 	<x-forms.order :order="$order" :apartments="$apartments"/>
 	@endif
-</div></x-layout>
+</x-layout>
