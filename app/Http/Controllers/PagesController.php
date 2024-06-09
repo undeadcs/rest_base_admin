@@ -53,7 +53,8 @@ class PagesController extends Controller {
 			'top_nav_items'	=> $this->navigation->items( TopPage::Main ),
 			'apartments'	=> $currentApartments,
 			'days'			=> $days,
-			'orderIndex'	=> $orderIndex
+			'orderIndex'	=> $orderIndex,
+			'apartment_types' => $this->navigation->ApartmentTypeItems( ApartmentType::House )
 		] );
 	}
 }

@@ -2,32 +2,19 @@
 namespace App\Services;
 
 use App\Enums\TopPage;
+use App\Enums\ApartmentType;
 
 /**
- * Сервис для рендеринга навигации в верхей части страниц
+ * Сервис для рендеринга навигации
  */
 class Navigation {
-	public static function TopPageTitle( TopPage $page ) : string {
-		return match( $page ) {
-			TopPage::Main			=> __( 'Календарь' ),
-			TopPage::Orders			=> __( 'Заявки' ),
-			TopPage::Apartments		=> __( 'Апартаменты' ),
-			TopPage::Customers		=> __( 'Клиенты' ),
-			TopPage::Inventories	=> __( 'Инвентарь' )
-		};
-	}
-	
-	public static function TopPageUrl( TopPage $page ) : string {
-		return route( 'page_'.$page->value );
-	}
-	
 	public function items( TopPage $currentPage ) : array {
 		$items = [ ];
 		
 		foreach( TopPage::cases( ) as $page ) {
 			$row = [
-				'url' => self::TopPageUrl( $page ),
-				'title' => self::TopPageTitle( $page )
+				'url'	=> $page->url( ),
+				'title'	=> $page->title( )
 			];
 			
 			if ( $page == $currentPage ) {
@@ -38,5 +25,9 @@ class Navigation {
 		}
 		
 		return $items;
+	}
+	
+	public function ApartmentTypeItems( ApartmentType $currentType ) : array {
+		return [ ];
 	}
 }
