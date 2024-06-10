@@ -12,9 +12,9 @@ return new class extends Migration {
 		Schema::create( 'orders', function( Blueprint $table ) {
 			$table->id( );
 			$table->timestamps( );
-			$table->foreignId( 'customer_id' )->constrained( )->cascadeOnDelete( );
-			$table->foreignId( 'apartment_id' )->constrained( )->cascadeOnDelete( );
-			$table->foreignId( 'apartment_price_id' )->constrained( )->cascadeOnDelete( );
+			$table->foreignId( 'customer_id' )->nullable( )->index( )->constrained( )->cascadeOnDelete( );
+			$table->foreignId( 'apartment_id' )->index( )->constrained( )->cascadeOnDelete( );
+			$table->foreignId( 'apartment_price_id' )->index( )->constrained( )->cascadeOnDelete( );
 			$table->smallInteger( 'status' );
 			$table->timestamp( 'from' );
 			$table->timestamp( 'to' );

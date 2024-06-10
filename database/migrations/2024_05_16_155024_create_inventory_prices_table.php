@@ -11,7 +11,7 @@ return new class extends Migration {
 	public function up( ) : void {
 		Schema::create( 'inventory_prices', function( Blueprint $table ) {
 			$table->id( );
-			$table->foreignId( 'inventory_id' )->constrained( )->cascadeOnDelete( );
+			$table->foreignId( 'inventory_id' )->index( )->constrained( )->cascadeOnDelete( );
 			$table->timestamp( 'created_at' );
 			$table->float( 'price' );
 		} );

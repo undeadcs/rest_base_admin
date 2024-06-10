@@ -14,6 +14,7 @@ return new class extends Migration {
 			$table->foreignId( 'inventory_id' )->constrained( )->cascadeOnDelete( );
 			$table->foreignId( 'order_id' )->constrained( )->cascadeOnDelete( );
 			$table->string( 'comment' );
+			$table->index( [ 'inventory_id', 'order_id' ] );
 		} );
 	}
 
